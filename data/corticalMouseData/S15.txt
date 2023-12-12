@@ -1,0 +1,10 @@
+GABA Gabbr1 Gabbr2 Gabra1 Gabra2 Gabra3 Gabra4 Gabra5 Gabrb1 Gabrb2 Gabrb3 Gabrd Gabrg1 Gabrg2 Gabrg3 
+Glutamate Gria1 Gria2 Gria3 Gria4 Grid1 Grik1 Grik2 Grik3 Grik4 Grik5 Grin1 Grin2a Grin2b Grin2d Grin3a Grina Grm1 Grm2 Grm3 Grm4 Grm5 Grm7 Grm8 
+Adenosine Adora1 
+Norepinephrine Adra1a Adra1b Adra1d Adra2a Adrb1 Adrb2 
+Acetylcholine Chrm1 Chrm2 Chrm3 Chrm4 Chrna1 Chrna2 Chrna3 Chrna4 Chrna5 Chrna6 Chrna7 Chrnb1 Chrnb2 Chrnb3 
+Endocannabinoids Cnr1 Cnr2 
+Dopamine Drd1a Drd5 
+Glycine Glra2 Glra3 Glrb 
+Histamine Hrh1 Hrh2 Hrh3 
+Serotonin Htr1a Htr1b Htr1d Htr1f Htr2a Htr2b Htr2c Htr3a Htr3b Htr4 Htr5a Htr5b Htr7 
