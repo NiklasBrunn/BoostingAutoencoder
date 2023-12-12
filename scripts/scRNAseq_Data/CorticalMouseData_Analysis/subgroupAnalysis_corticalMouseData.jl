@@ -40,6 +40,10 @@ projectpath = joinpath(@__DIR__, "../../../");
 srcpath = projectpath * "src/";
 datapath = projectpath * "data/corticalMouseData/";
 figurespath = projectpath * "figures/corticalMouseData_subgroupAnalysis/";
+if !isdir(figurespath)
+    # Create the folder if it does not exist
+    mkdir(figurespath)
+end
 
 #---Include functions:
 include(srcpath * "utility.jl");

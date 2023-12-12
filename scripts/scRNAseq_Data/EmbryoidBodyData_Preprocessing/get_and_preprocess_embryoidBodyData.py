@@ -27,6 +27,9 @@ logging.basicConfig(level=logging.INFO)
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 projectpath = os.path.join(cur_dir, '../../../')
 datapath = projectpath + 'data/embryoidBodyData/';
+if not os.path.exists(datapath):
+    # Create the folder if it does not exist
+    os.makedirs(datapath)
 
 #---Load data from 5 different timepoints 
 #Note: We exclude data from time point one for the modeling task with the timeBAE:

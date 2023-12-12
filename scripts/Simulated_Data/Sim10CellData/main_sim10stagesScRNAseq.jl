@@ -36,6 +36,10 @@ projectpath = joinpath(@__DIR__, "../../../");
 srcpath = projectpath * "src/";
 datapath = projectpath * "data/sim10stagesScRNAseq/";
 figurespath = projectpath * "figures/sim10stagesScRNAseq/";
+if !isdir(figurespath)
+    # Create the folder if it does not exist
+    mkdir(figurespath)
+end
 
 #---Include functions:
 include(srcpath * "utility.jl");

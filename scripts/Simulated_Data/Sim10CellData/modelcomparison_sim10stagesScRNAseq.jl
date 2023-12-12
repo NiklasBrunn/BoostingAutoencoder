@@ -36,6 +36,10 @@ using ProgressMeter;
 projectpath = joinpath(@__DIR__, "../../../"); 
 srcpath = projectpath * "src/";
 figurespath = projectpath * "figures/sim10stagesScRNAseq_modelcomparison/";
+if !isdir(figurespath)
+    # Create the folder if it does not exist
+    mkdir(figurespath)
+end
 
 #---Include functions:
 include(srcpath * "utility.jl");

@@ -16,6 +16,9 @@ cur_dir = os.path.dirname(os.path.abspath(__file__))
 projectpath = os.path.join(cur_dir, '../../../')
 datapath = projectpath + 'data/embryoidBodyData/';
 figurespath = projectpath + 'figures/embryoidBodyData_linearRegression_comparison/';
+if not os.path.exists(figurespath):
+    # Create the folder if it does not exist
+    os.makedirs(figurespath)
 
 #---Load corticalMouseData:
 data = np.loadtxt(datapath + 'EB_dataMat_DEGs.txt', delimiter="\t") #log1p transformed counts

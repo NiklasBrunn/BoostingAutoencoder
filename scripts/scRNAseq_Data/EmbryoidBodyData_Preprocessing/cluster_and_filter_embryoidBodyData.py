@@ -31,6 +31,9 @@ cur_dir = os.path.dirname(os.path.abspath(__file__))
 projectpath = os.path.join(cur_dir, '../../../')
 datapath = projectpath + 'data/embryoidBodyData/';
 figurespath = projectpath + 'figures/embryoidBodyData/';
+if not os.path.exists(figurespath):
+    # Create the folder if it does not exist
+    os.makedirs(figurespath)
 
 
 
