@@ -113,8 +113,3 @@ function normalizecountdata(mat)
     sizefactors = estimatesizefactorsformatrix(mat)
     return mat ./ sizefactors'
 end
-
-
-#-----------------
-#EmbryoidBodyData:
-#-----------------

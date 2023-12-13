@@ -150,34 +150,6 @@ BAE = Autoencoder(encoder, decoder);
 Random.seed!(batchseed); 
 B_BAE = trainBAE(X_train_st, BAE; mode=mode, zdim=zdim, ϵ=ϵ, batchsize=batchsize, epochs=epochs);
 
-
-#-new training function:
-#B_BAE = zeros(Float32, p, zdim);
-#Random.seed!(modelseed);
-#decoder = Chain(
-#            Dense(zdim, p, tanh),
-#            Dense(p, p)         
-#);
-#Random.seed!(batchseed);
-#losses, B_BAE = new_trainBAE(X_train_st, decoder, B_BAE; 
-#    ϵ=0.01, 
-#    η=0.01, 
-#    λ=0.05,
-#    batchsize=400, 
-#    epochs=15, 
-#    M=1
-#);
-#plot(1:length(losses), losses,
-#     title = "Loss Over Epochs",
-#     xlabel = "Epoch",
-#     ylabel = "Loss",
-#     legend = true,
-#     label = "Train loss",
-#     linecolor = :blue,
-#     linewidth = 2
-#)
-
-
 Z_BAE = st_dataMat * B_BAE;
 sort_Z_BAE = sorted_st_datamat * B_BAE;
 
@@ -215,12 +187,6 @@ vegaheatmap(sort_Z_BAE; path=figurespath * "sort_latentRep_BAE.pdf",
             legend_title="Representation value",
             scheme="blueorange", set_domain_mid=true, save_plot=true
 );
-sort_Z_PCA = prcomps(sorted_st_datamat);
-vegaheatmap(sort_Z_PCA[:, 1:zdim]; path=figurespath * "sort_latentRep_PCA.pdf", 
-            legend_title="Representation value",
-            scheme="blueorange", set_domain_mid=true, save_plot=true
-);
-
 
 #---Create colored UMAP plots:
 num_pcs = zdim; 
@@ -291,12 +257,6 @@ end
 for l in 1:size(Y, 2)
     pl = normalized_scatter_top_values(B_compL2Boost[:, l], genenames; top_n=15, dim=l)
     savefig(pl, figurespath * "scatterplot_selGenes_compL2Boost_latdim$(l).pdf")
-end
-
-B_PCA = prcomps_modified(st_dataMat; components=zdim, num_entries=15, standardizeinput=false)[2];
-for l in 1:zdim
-    pl = normalized_scatter_top_values(B_PCA[:, l], genenames; top_n=10, dim=l)
-    savefig(pl, figurespath * "scatterplot_selGenes_PCA(top10)_latdim$(l).pdf")
 end
 
 

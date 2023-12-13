@@ -62,7 +62,6 @@ include(srcpath * "plotting.jl");
 #---Load Data generated in the preprocessing script (get_corticalMouseData.jl):
 ctype = "Sst"
 st_dataMat = readdlm(datapath * "corticalMouseDataMat_" * ctype * "_HVGs_st.txt");
-log1_dataMat = readdlm(datapath * "corticalMouseDataMat_" * ctype * "_HVGs_log1.txt");
 genenames = vec(readdlm(datapath * "genenames_" * ctype * "_HVGs.txt"));
 
 n, p = Int32.(size(st_dataMat));

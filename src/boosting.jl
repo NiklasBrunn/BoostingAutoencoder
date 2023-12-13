@@ -83,7 +83,7 @@ function compL2Boost_combinedLoss(β::AbstractVector{<:AbstractFloat}, X::Abstra
     return β
 end
 
-function sim_compL2Boost(X::AbstractMatrix{<:AbstractFloat}, BAE::Autoencoder, ϵ::Number, zdim::Int, M::Int)
+function seq_compL2Boost(X::AbstractMatrix{<:AbstractFloat}, BAE::Autoencoder, ϵ::Number, zdim::Int, M::Int)
     
     #compute neg. gradient - vectors w.r.t. latent dimensions:
     grads = get_latdim_grads(X', BAE) 
@@ -172,42 +172,6 @@ function seq_constr_compL2Boost_combinedLoss(batch::AbstractMatrix{<:AbstractFlo
             β = compL2Boost_combinedLoss(BAE.encoder.coeffs[:, l], batch', y, ϵ, M) 
             BAE.encoder.coeffs = hcat(BAE.encoder.coeffs[:, 1:l-1], β, BAE.encoder.coeffs[:, l+1:end])
         end
-    end
-        
-    return BAE.encoder.coeffs
-end
-
-#---new boosting function for training the BAE:
-function new_seq_constr_compL2Boost(batch::AbstractMatrix{<:AbstractFloat}, grads::AbstractMatrix{<:AbstractFloat}, BAE::Autoencoder, ϵ::Number, zdim::Int, M::Int)
-    
-    batch_t = batch'
-
-    for l in 1:zdim
-
-        #determine the indices of latent dimensions excluded for determining the pseudo-target for boosting:
-        Inds = union(find_zero_columns(BAE.encoder.coeffs), l)
-
-        if length(Inds) == zdim
-            #since all lat. dims. are excluded, the pseudo target is determined by the st. neg. grad.:
-            y = standardize(-grads[l, :])
-
-            #apply componentwise boosting to update one component of the β-vector(l-th col. of matrix B):
-            BAE.encoder.coeffs[:, l] = compL2Boost!(BAE.encoder.coeffs[:, l], batch_t, y, ϵ, M)
-
-        else
-            #compute optimal current OLLS-fit of other latent repr. to the st. neg. grad:
-            curdata = batch_t * BAE.encoder.coeffs[:, Not(Inds)]
-            curtarget = standardize(-grads[l, :]) 
-            curestimate = inv(curdata'curdata)*(curdata'curtarget) 
-             #curestimate = inv(curdata'curdata + Float32.(1.0e-5 * Matrix(I, size(curdata, 2), size(curdata, 2))))*(curdata'curtarget)  #damped version for avoiding invertibility problems
-
-            #compute the pseudo-target for the boosting [st. difference of st. neg. grad and optimal OLLS-fit]:
-            y = standardize(curtarget .- (curdata * curestimate))
-
-            #apply componentwise boosting to update one component of the β-vector (l-th col. of matrix B):
-            BAE.encoder.coeffs[:, l] = compL2Boost!(BAE.encoder.coeffs[:, l], batch_t, y, ϵ, M)
-        end
-        
     end
         
     return BAE.encoder.coeffs

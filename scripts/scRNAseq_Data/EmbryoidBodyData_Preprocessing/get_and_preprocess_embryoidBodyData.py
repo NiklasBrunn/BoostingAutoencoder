@@ -96,6 +96,6 @@ metadata = pd.concat([library_size, sample_labels], axis=1)
 
 #---Save the data:
 logging.info('Saving data ...')
-data_filt.to_pickle(datapath + "embryoidbody_data_filt.pickle.gz")
+#data_filt.to_pickle(datapath + "embryoidbody_data_filt.pickle.gz")
 data_norm.to_pickle(datapath + "embryoidbody_data_norm.pickle.gz")
 metadata.to_pickle(datapath + "embryoidbody_metadata.pickle.gz")

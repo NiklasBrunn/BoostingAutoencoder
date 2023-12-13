@@ -58,34 +58,6 @@ function prcomps(mat; standardizeinput = false)
     return prcomps
 end
 
-function prcomps_modified(X::AbstractMatrix; components::Int=10, num_entries::Int=3, standardizeinput::Bool=true)
-    #standardize the input matrix if indicated
-    if standardizeinput
-        mat = standardize(mat)
-    end
-
-    # Compute the Singular Value Decomposition (SVD) of X
-    U, S, Vt = svd(X)
-    
-    # The principal components are given by X * V
-    W = Vt'
-    
-    # Create a modified W matrix, keeping only the top num_entries absolute values per column
-    W_modified = zeros(size(W))
-    for j = 1:size(W, 2)
-        # Find the indices of the top k absolute values in column j
-        sorted_indices = sortperm(abs.(W[:, j]), rev=true)
-        top_k_indices = sorted_indices[1:num_entries]
-        
-        # Set the entries at these indices in the modified W to their original values
-        W_modified[top_k_indices, j] = W[top_k_indices, j]
-    end
-
-    prcomps = X * W_modified[:, 1:components]
-    
-    return prcomps, W_modified[:, 1:components]
-end
-
 function generate_umap(X, plotseed; n_neighbors::Int=30, min_dist::Float64=0.4)
     Random.seed!(plotseed)  
     embedding = umap(X', n_neighbors=n_neighbors, min_dist=min_dist)'

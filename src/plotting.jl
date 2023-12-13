@@ -158,9 +158,6 @@ function create_latent_umaps(X::AbstractMatrix, plotseed, Z::AbstractMatrix, mod
 
 end
 
-#For scatter plots, we need to use a workaround to display a colorbar. 
-#We can create a fake heatmap in the background with the desired color scheme 
-#and then overlay the scatter plot on top of it. 
 function normalized_scatter_top_values(vec, custom_labels; top_n=15, dim=k)
     # Filter out zeros and get indices of nonzero elements
     non_zero_indices = findall(x -> x != 0, vec)
