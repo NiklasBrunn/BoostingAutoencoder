@@ -280,7 +280,7 @@ Notes:
     - L1 regularization encourages sparsity in the single-layer encoder's weights by shrinking many of the non-informative weights towards zero.
 
 """
-loss_L1reg(Xt::AbstractMatrix, AE::Autoencoder, α::AbstractFloat) = Flux.mse(AE(Xt), Xt) + α * sum(abs.(AE.encoder.W))
+loss_L1reg(Xt::AbstractMatrix, AE::Autoencoder, α::AbstractFloat) = Flux.mse(AE(Xt), Xt) + α * sum(abs.(AE.encoder.W)) 
 
 
 """

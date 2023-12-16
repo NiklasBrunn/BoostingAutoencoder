@@ -149,25 +149,43 @@ absCor_Z_perm = abs.(cor(Z_perm, dims=1));
 # Visualization:
 #------------------------------
 plotseed = 42;
+
+#---re-name timepoint lables for plots: 
+timepoints_plot = copy(timepoints);
+label = 1
+for t in unique(timepoints)
+    timepoints_plot[timepoints_plot .== t] .= label
+    label+=1
+end
+
+#---re-name cluster lables for plots:
+clusters_plot = copy(clusters);
+label = 3
+for c in [2, 1, 0]
+    clusters_plot[clusters_plot .== c] .= label
+    label-=1
+end
+
 #---Create a UMAP plot of cells colored by measurement time points:
-create_colored_umap_plot(X_st, timepoints, plotseed; embedding=EB_umap_coords, 
+create_colored_umap_plot(X_st, timepoints_plot, plotseed; embedding=EB_umap_coords, 
                          precomputed=true, save_plot=true, path=figurespath * "/embryoidBodyData_umap_colBy_timepoints.pdf", 
                          colorlabel="Timepoint", legend_title="Time point", legend_symbolSize=150.0, marker_size="10", 
                          Title="UMAP of filtered EB data colored by timepoints", title_fontSize=15.0
 );
 
 #---Create a UMAP plot of cells colored by cluster membership:
-create_colored_umap_plot(X_st, clusters, plotseed; embedding=EB_umap_coords, 
+create_colored_umap_plot(X_st, clusters_plot, plotseed; embedding=EB_umap_coords, 
                          precomputed=true, save_plot=true, path=figurespath * "/embryoidBodyData_umap_colBy_leidenCluster.pdf", 
                          colorlabel="Cluster", legend_title="Cluster", legend_symbolSize=150.0, marker_size="10", 
-                         Title="UMAP of filtered EB data colored by Leiden clustering (res 0.025)", title_fontSize=15.0
+                         Title="UMAP of filtered EB data colored by Leiden clustering (res 0.025)", title_fontSize=15.0,
+                         scheme="dark2"
 );
 
 #---Create a UMAP plot of cells colored by the representation value of each timeBAE latent dimension:
 create_latent_umaps(X_st, plotseed, Z_perm, "timeBAE"; 
                     figurespath=figurespath * "/timeBAE_(pcaUMAP)",
                     precomputed=true, embedding=EB_umap_coords, save_plot=true, 
-                    legend_title="Representation value", image_type=".pdf"
+                    legend_title="Representation value", image_type=".pdf",  marker_size="10"
 );
 
 

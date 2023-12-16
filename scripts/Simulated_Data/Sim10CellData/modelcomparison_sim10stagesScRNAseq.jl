@@ -208,7 +208,7 @@ while epoch <= num_epochs
 
     batch = Flux.Data.DataLoader(X', batchsize=batchsize, shuffle=true) 
             
-    BAE.encoder.coeffs = sim_compL2Boost(X, nodisentBAE, ϵ, zdim, M)
+    BAE.encoder.coeffs = seq_compL2Boost(X, nodisentBAE, ϵ, zdim, M)
                             
     Flux.train!(loss_wrapper(nodisentBAE), ps, batch, opt) 
     B = nodisentBAE.encoder.coeffs;
