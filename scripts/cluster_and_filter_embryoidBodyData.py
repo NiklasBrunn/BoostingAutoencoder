@@ -28,7 +28,7 @@ import logging
 #-------------------------
 #---Setting paths: 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
-projectpath = os.path.join(cur_dir, '../../')
+projectpath = os.path.join(cur_dir, '../')
 datapath = projectpath + 'data/embryoidBodyData/';
 figurespath = projectpath + 'figures/embryoidBodyData/';
 if not os.path.exists(figurespath):

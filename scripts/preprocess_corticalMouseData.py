@@ -25,7 +25,7 @@ logging.basicConfig(level=logging.INFO)
 
 #---Setting paths: 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
-projectpath = os.path.join(cur_dir, '../../')
+projectpath = os.path.join(cur_dir, '../')
 datapath = projectpath + 'data/corticalMouseData/';
 
 

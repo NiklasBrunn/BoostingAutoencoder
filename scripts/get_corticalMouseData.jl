@@ -41,7 +41,7 @@ using Statistics;
 # Define paths and include functions:
 #------------------------------
 #---Set paths:
-projectpath = joinpath(@__DIR__, "../../"); 
+projectpath = joinpath(@__DIR__, "../"); 
 srcpath = projectpath * "src/";
 datapath = projectpath * "data/corticalMouseData/";
 
