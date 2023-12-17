@@ -64,9 +64,7 @@ rescale_factor = 1.5;
 
 #---Data generation:
 (X, X_dicho) = simulate_10StagesScRNAseq(dataseed; rescale_val=rescale_factor);
-X_st = simulate_10StagesScRNAseq(dataseed; rescale_val=0)[1];
-
-#pcs, W = prcomps_modified(X; components=10, num_entries=1, standardizeinput=false);
+X_st = simulate_10StagesScRNAseq(dataseed; rescale_val=1)[1];
 
 p = size(X, 2);
 

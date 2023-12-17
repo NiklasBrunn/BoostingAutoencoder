@@ -56,7 +56,7 @@ include(srcpath * "/preprocessing.jl");
 #---Download data [count matrix, gene names, sample info] (Tasic et. al., Nat Neuroscience 2016)::
 x, genenames, sampleinfo = expressiondata(datapath);
 
-#---Normalize count matrix:
+#---Normalize count matrix (DESeq2):
 xnorm = normalizecountdata(x);
 
 #---(opt.) Load pre-selected marker-and receptor gene information (Tasic et. al., Nat Neuroscience 2016):

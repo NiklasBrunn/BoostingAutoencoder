@@ -26,7 +26,6 @@ using DataFrames;
 using VegaLite;
 using UMAP;
 using StatsBase;
-using Distances;
 using CSV;
 using ColorSchemes;
 using ProgressMeter;
