@@ -36,7 +36,7 @@ using ProgressMeter;
 # Define paths and include functions:
 #------------------------------
 #---Set paths:
-projectpath = joinpath(@__DIR__, "../../../"); 
+projectpath = joinpath(@__DIR__, "../../"); 
 srcpath = projectpath * "src/";
 datapath = projectpath * "data/embryoidBodyData/";
 figurespath = projectpath * "figures/embryoidBodyData/"; 

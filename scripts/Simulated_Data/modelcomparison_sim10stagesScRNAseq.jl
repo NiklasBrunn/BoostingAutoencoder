@@ -33,7 +33,7 @@ using ProgressMeter;
 # Define paths and include functions:
 #------------------------------
 #---Set paths:
-projectpath = joinpath(@__DIR__, "../../../"); 
+projectpath = joinpath(@__DIR__, "../../"); 
 srcpath = projectpath * "src/";
 figurespath = projectpath * "figures/sim10stagesScRNAseq_modelcomparison/";
 if !isdir(figurespath)
