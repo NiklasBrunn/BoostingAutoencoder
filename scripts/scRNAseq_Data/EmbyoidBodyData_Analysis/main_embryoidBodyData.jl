@@ -107,7 +107,7 @@ epochs = 15;
 
 ϵ = 0.01; 
 
-mode = "alternating";
+mode = "alternating"; 
 
 
 
@@ -122,7 +122,7 @@ decoder = Chain(
 
 BAE = Autoencoder(encoder, decoder);
 
-#---Train timeBAE (jointLoss mode):
+#---Train timeBAE:
 Random.seed!(batchseed);
 B = trainBAE(L_st, BAE; mode=mode, time_series=true, zdim=zdim, ϵ=ϵ, batchsize=batchsize, epochs=epochs);
 
