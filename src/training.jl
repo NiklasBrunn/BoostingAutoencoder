@@ -2,8 +2,27 @@
 # This file contains the training function for the BAE and timeBAE:
 #------------------------------
 
-#---training function for the BAE: #TODO! multiple dispatch 
-function trainBAE(X::AbstractArray, BAE::Autoencoder; mode::String="alternating", time_series::Bool=false, ϵ::Number=0.02, ν::Number=0.01, zdim::Int=6, m::Int=1, batchsize::Int=size(X, 1), epochs::Int=50)
+"""
+    trainBAE(X::AbstractArray, BAE::Autoencoder; mode::String="alternating", time_series::Bool=false, ϵ::Number=0.01, ν::Number=0.01, zdim::Int=10, m::Int=1, batchsize::Int=size(X, 1), epochs::Int=50)
+
+Train a Boosting Autoencoder (BAE) or a time-series Boosting Autoencoder (timeBAE) on the given data. User can choose between the alternating and the jointLoss training mode. The alternating mode trains the encoder and decoder in an alternating fashion, while the jointLoss mode trains the encoder and decoder jointly. The user can also choose whether the input data is a time series or not. If the input data is a time series, the timeBAE is trained, otherwise the BAE is trained. 
+
+# Arguments
+- `X::AbstractArray`: The input data with size (n_samples, n_features).
+- `BAE::Autoencoder`: The Boosting Autoencoder or time-series Boosting Autoencoder model to be trained.
+- `mode::String="alternating"`: The training mode. Possible values are "alternating" and "jointLoss".
+- `time_series::Bool=false`: Whether the input data is a time series or not.
+- `ϵ::Number=0.01`: The step size parameter for the boosting component.
+- `ν::Number=0.01`: The learning rate for the optimizer that updates the decoder parameters.
+- `zdim::Int=10`: The dimension of the latent space.
+- `m::Int=1`: The number of boosting iterations.
+- `batchsize::Int=size(X, 1)`: The batch size for training.
+- `epochs::Int=50`: The number of training epochs.
+
+# Returns
+- `BAE.encoder.coeffs`: The encoder weight matrix after trining. If the input data is a time series, the encoder weight matrix is a block matrix, where each block corresponds to the encoder weight matrix at a specific time point.
+"""
+function trainBAE(X::AbstractArray, BAE::Autoencoder; mode::String="alternating", time_series::Bool=false, ϵ::Number=0.01, ν::Number=0.01, zdim::Int=10, m::Int=1, batchsize::Int=size(X, 1), epochs::Int=50)
 
     if time_series == false
         #---BAE:

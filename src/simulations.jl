@@ -2,7 +2,23 @@
 # This file contains functions for generating simulated scRNA-seq-like datasets:
 #------------------------------
 
-function addstages!(X,stageno;stagen=1,stagep=2,overlap=1,blockprob=1.0)
+"""
+    addstages!(X, stageno; stagen=1, stagep=2, overlap=1, blockprob=1.0)
+
+Add stages to a matrix `X` by modifying its values in-place.
+
+# Arguments
+- `X::Matrix`: The matrix to which stages will be added.
+- `stageno::Int`: The number of stages to add.
+- `stagen::Int=1`: The number of rows in each stage.
+- `stagep::Int=2`: The number of columns in each stage.
+- `overlap::Int=1`: The number of overlapping columns between stages.
+- `blockprob::Float64=1.0`: The probability of a block being filled with ones.
+
+# Returns
+- `X::Matrix`: The modified matrix `X` with added stages.
+"""
+function addstages!(X, stageno; stagen=1, stagep=2, overlap=1, blockprob=1.0)
     curp = 1
     curn = 1
     for i = 1:stageno
@@ -19,14 +35,35 @@ function addstages!(X,stageno;stagen=1,stagep=2,overlap=1,blockprob=1.0)
 end
 
 
-""" 
-Function for generating the cell-dataseet which is a n x num_genes - matrix containing 0/1 - values
-depending on the block-and noise probability and the position of the value in the matrix.
-The matrix gets standardized over the features (num_genes).
+"""
+    simulate_10StagesScRNAseq(dataseed = 1;
+        rescale_val = 1.5,
+        n = 1000, 
+        num_genes = 50, 
+        stageno = 10, 
+        stagep = Int(50 / 10), 
+        stagen = Int(1000 / 10), 
+        stageoverlap = 2, 
+        blockprob = 0.6, 
+        noiseprob = 0.1)
 
-...
+Simulates a single-cell RNA sequencing (scRNA-seq) dataset consisting of cells in ten different stages of a developmental process.
 
-v is a parameter for changing the variance of the last 13 (noise) features for the standerdization.
+# Arguments
+- `dataseed::Int`: Seed for random number generation.
+- `rescale_val::Float64`: Value used for rescaling the noise genes in the simulated data.
+- `n::Int`: Number of cells in the dataset.
+- `num_genes::Int`: Number of genes in the dataset.
+- `stageno::Int`: Number of stages in the dataset.
+- `stagep::Int`: Number of cells per stage.
+- `stagen::Int`: Number of cells per stage group.
+- `stageoverlap::Int`: Number of overlapping cells between stages.
+- `blockprob::Float64`: Probability of a gene being blocked in a stage.
+- `noiseprob::Float64`: Probability of a gene being noisy in a cell.
+
+# Returns
+- `X::Matrix{Float64}`: Simulated scRNA-seq dataset with standardized counts and re-scaled noise genes.
+- `X_dicho::Matrix{Float64}`: Simulated scRNA-seq dataset with binary values.
 """
 function simulate_10StagesScRNAseq(dataseed = 1;
     rescale_val = 1.5,
@@ -41,8 +78,8 @@ function simulate_10StagesScRNAseq(dataseed = 1;
     )
 
     Random.seed!(dataseed)
-    X = 1.0*(rand(n, num_genes) .> (1-noiseprob)) 
-    X = addstages!(X,stageno,stagen=stagen,stagep=stagep,overlap=stageoverlap,blockprob=blockprob) 
+    X = 1.0*(rand(n, num_genes) .> (1 - noiseprob)) 
+    X = addstages!(X, stageno, stagen=stagen, stagep=stagep, overlap=stageoverlap, blockprob=blockprob) 
 
 
     X_dicho = copy(X)
@@ -58,13 +95,24 @@ end
 
 
 """
-Generating 3 sparse matrices containing only zeros and ones depending on specific areas in each matrix, 
-with probabilities p1 and p2. Also we generate standardized versions of each timepoint matrix 
-and versions of the standardized matrices where we inversly scale the noise features with the parameter v.
-Output is the complete dichotomized matrix X_dicho, the complete standardized version X, for each timepoint 
-from i=1,...,3 the dichotomized matrices Xi_dicho and standardized matrices Xi.
-Further we collect all the standardized matrices for each timepoint in one matrix Xst.
-Dataseed is a parameter to controle under which seed the data is generated (for reproducibility).
+    simulate_3cellgroups3stagesScRNAseq(dataseed; n=[310, 298, 306], p=80, p1=0.6, p2=0.1, rescale_factor=1.5)
+
+Simulates a single-cell RNA sequencing dataset consisting of three count matrices modelling a developmental process of three cell groups across three time points.
+
+# Arguments
+- `dataseed`: The seed for the random number generator.
+- `n`: An array specifying the number of cells at each time point. Default is `[310, 298, 306]`.
+- `p`: The number of genes. Default is `80`.
+- `p1`: The probability of getting the value one for a highly expressed gene. Default is `0.6`.
+- `p2`: The probability of getting the value one for a lowly expressed gene. Default is `0.1`.
+- `rescale_factor`: The rescaling factor for noise genes. Default is `1.5`.
+
+# Returns
+A tuple `(L_dicho, L, X_dicho, X)` containing the following matrices:
+- `L_dicho`: An array containing the three binary count matrices containing the simulated gene expression data for cell groups at each time point.
+- `L`: An array containing the three standardized count matrices containing the simulated gene expression data for cell groups at each time point with re-scaled noise genes.
+- `X_dicho`: A matrix containing the simulated binary gene expression data for all cell groups from each timepoint.
+- `X`: A matrix containing the simulated standardized gene expression data for all cell groups from each timepoint with re-scaled noise genes.
 """
 function simulate_3cellgroups3stagesScRNAseq(dataseed; 
     n=[310, 298, 306], p=80, 
@@ -119,7 +167,7 @@ function simulate_3cellgroups3stagesScRNAseq(dataseed;
         end
     end
 
-    #collect timepointmatrices in a vcat matrix and additionally generate a standardized version:
+    #collect timepoint matrices in a vcat matrix and additionally generate a standardized version:
     X_dicho = vcat(X1_dicho, X2_dicho, X3_dicho)
 
     X = standardize(X_dicho)

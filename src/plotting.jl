@@ -2,6 +2,58 @@
 # This file contains the functions for generating the plots of the results: 
 #------------------------------
 
+"""
+    vegaheatmap(Z::AbstractMatrix; 
+        path::String=joinpath(@__DIR__, "../") * "heatmap.pdf", 
+        Title::String=" ",
+        xlabel::String="Latent Dimension", 
+        ylabel::String="Observation",
+        legend_title::String="value",
+        color_field::String="value",
+        scheme::String="blueorange",
+        sortx::String="ascending",
+        sorty::String="descending",
+        Width::Int=400, 
+        Height::Int=400,
+        save_plot::Bool=false,
+        set_domain_mid::Bool=false,
+        axis_labelFontSize::AbstractFloat=10.0,
+        axis_titleFontSize::AbstractFloat=10.0,
+        legend_labelFontSize::AbstractFloat=10.0,
+        legend_titleFontSize::AbstractFloat=10.0,
+        legend_symbolSize::AbstractFloat=180.0,
+        title_fontSize::AbstractFloat=15.0
+        )
+
+This function generates a heatmap plot using the Vega-Lite library based on the input matrix `Z`.
+
+## Arguments
+- `Z::AbstractMatrix`: The input matrix for generating the heatmap plot.
+
+## Optional Arguments
+- `path::String`: The file path to save the generated plot. Default is `joinpath(@__DIR__, "../") * "heatmap.pdf"`.
+- `Title::String`: The title of the plot. Default is an empty string.
+- `xlabel::String`: The label for the x-axis. Default is "Latent Dimension".
+- `ylabel::String`: The label for the y-axis. Default is "Observation".
+- `legend_title::String`: The title for the legend. Default is "value".
+- `color_field::String`: The field to use for coloring the heatmap. Default is "value".
+- `scheme::String`: The color scheme to use for the heatmap. Default is "blueorange".
+- `sortx::String`: The sorting order for the x-axis. Default is "ascending".
+- `sorty::String`: The sorting order for the y-axis. Default is "descending".
+- `Width::Int`: The width of the plot in pixels. Default is 400.
+- `Height::Int`: The height of the plot in pixels. Default is 400.
+- `save_plot::Bool`: Whether to save the plot. Default is false.
+- `set_domain_mid::Bool`: Whether to set the domain midpoint for the color scale. Default is false.
+- `axis_labelFontSize::AbstractFloat`: The font size for the axis labels. Default is 10.0.
+- `axis_titleFontSize::AbstractFloat`: The font size for the axis titles. Default is 10.0.
+- `legend_labelFontSize::AbstractFloat`: The font size for the legend labels. Default is 10.0.
+- `legend_titleFontSize::AbstractFloat`: The font size for the legend title. Default is 10.0.
+- `legend_symbolSize::AbstractFloat`: The size of the legend symbols. Default is 180.0.
+- `title_fontSize::AbstractFloat`: The font size for the plot title. Default is 15.0.
+
+## Returns
+- `vega_hmap`: The generated heatmap plot as a Vega-Lite object.
+"""
 function vegaheatmap(Z::AbstractMatrix; 
     path::String=joinpath(@__DIR__, "../") * "heatmap.pdf", 
     Title::String=" ",
@@ -57,6 +109,61 @@ function vegaheatmap(Z::AbstractMatrix;
     return vega_hmap
 end
 
+
+"""
+    create_colored_umap_plot(X::AbstractMatrix, labels::AbstractVector, plotseed;
+                            precomputed::Bool=false,
+                            path::String=figurespath * "/umap_data_labels.pdf",
+                            Title::String=" ",
+                            legend_title::String="value",
+                            n_neighbors::Int=30,
+                            min_dist::Float64=0.4,
+                            color_field::String="labels:o",
+                            scheme::String="category20",
+                            colorlabel::String="Cell Type",
+                            save_plot::Bool=true,
+                            embedding::AbstractMatrix=zeros(2,2),
+                            value_type::String="discrete",
+                            marker_size::String="20",
+                            axis_labelFontSize::AbstractFloat=10.0,
+                            axis_titleFontSize::AbstractFloat=10.0,
+                            legend_labelFontSize::AbstractFloat=10.0,
+                            legend_titleFontSize::AbstractFloat=10.0,
+                            legend_symbolSize::AbstractFloat=10.0,
+                            title_fontSize::AbstractFloat=10.0
+                            )
+
+Create a colored scatter plot of 2D UMAP based on the given data using the Vega-Lite library.
+
+# Arguments
+- `X::AbstractMatrix`: The input data matrix for generating the 2D UMAP coordinates.
+- `labels::AbstractVector`: The labels or values for each data point used for the color coding.
+- `plotseed`: The random seed for generating the plot.
+
+# Optional Arguments
+- `precomputed::Bool=false`: Whether the UMAP embedding is already precomputed.
+- `path::String=figurespath * "/umap_data_labels.pdf"`: The path to save the plot.
+- `Title::String=" "`: The title of the plot.
+- `legend_title::String="value"`: The title of the legend.
+- `n_neighbors::Int=30`: The number of neighbors to consider in the UMAP algorithm.
+- `min_dist::Float64=0.4`: The minimum distance between points in the UMAP algorithm.
+- `color_field::String="labels:o"`: The field to use for coloring the plot.
+- `scheme::String="category20"`: The color scheme to use for generating the plot.
+- `colorlabel::String="Cell Type"`: The label for the color field.
+- `save_plot::Bool=true`: Whether to save the plot to a file.
+- `embedding::AbstractMatrix=zeros(2,2)`: The precomputed UMAP embedding.
+- `value_type::String="discrete"`: The type of values for the color field.
+- `marker_size::String="20"`: The size of the markers in the plot.
+- `axis_labelFontSize::AbstractFloat=10.0`: The font size of the axis labels.
+- `axis_titleFontSize::AbstractFloat=10.0`: The font size of the axis titles.
+- `legend_labelFontSize::AbstractFloat=10.0`: The font size of the legend labels.
+- `legend_titleFontSize::AbstractFloat=10.0`: The font size of the legend title.
+- `legend_symbolSize::AbstractFloat=10.0`: The size of the legend symbols.
+- `title_fontSize::AbstractFloat=10.0`: The font size of the plot title.
+
+# Returns
+- `umap_plot`: The generated colored 2D UMAP plot.
+"""
 function create_colored_umap_plot(X::AbstractMatrix, labels::AbstractVector, plotseed; 
     precomputed::Bool=false,
     path::String=figurespath * "/umap_data_labels.pdf",
@@ -124,6 +231,47 @@ function create_colored_umap_plot(X::AbstractMatrix, labels::AbstractVector, plo
     return umap_plot
 end
 
+"""
+    create_latent_umaps(X::AbstractMatrix, plotseed, Z::AbstractMatrix, model_name::String, ;
+        figurespath::String=figurespath,
+        image_type::String=".pdf",
+        legend_title::String="value",
+        precomputed::Bool=false,
+        embedding::AbstractMatrix=zeros(2,2),
+        save_plot::Bool=true,
+        marker_size::String="20",
+        axis_labelFontSize::AbstractFloat=10.0,
+        axis_titleFontSize::AbstractFloat=10.0,
+        legend_labelFontSize::AbstractFloat=10.0,
+        legend_titleFontSize::AbstractFloat=10.0,
+        legend_symbolSize::AbstractFloat=10.0,
+        title_fontSize::AbstractFloat=15.0
+        )
+
+Given data X, this function creates 2D UMAP plots colored by each column of the matrix Z individually. Z can e.g. be a latent representation of the data X.
+
+# Arguments
+- `X::AbstractMatrix`: The input data matrix.
+- `plotseed`: The random seed for plotting.
+- `Z::AbstractMatrix`: A matrix used for coloring the generated plots.
+- `model_name::String`: The name of the model that produced the matrix Z.
+- `figurespath::String`: The path to save the figures. Default is `figurespath`.
+- `image_type::String`: The image file type. Default is ".pdf".
+- `legend_title::String`: The title for the legend. Default is "value".
+- `precomputed::Bool`: Whether the UMAP coordinates are precomputed. Default is `false`.
+- `embedding::AbstractMatrix`: The precomputed UMAP coordinates. If not specified by the user, default is a 2x2 matrix of zeros.
+- `save_plot::Bool`: Whether to save the plots. Default is `true`.
+- `marker_size::String`: The size of the markers in the plot. Default is "20".
+- `axis_labelFontSize::AbstractFloat`: The font size for the axis labels. Default is 10.0.
+- `axis_titleFontSize::AbstractFloat`: The font size for the axis titles. Default is 10.0.
+- `legend_labelFontSize::AbstractFloat`: The font size for the legend labels. Default is 10.0.
+- `legend_titleFontSize::AbstractFloat`: The font size for the legend title. Default is 10.0.
+- `legend_symbolSize::AbstractFloat`: The size of the legend symbols. Default is 10.0.
+- `title_fontSize::AbstractFloat`: The font size for the plot title. Default is 15.0.
+
+# Note
+- The function saves the generated UMAP plots in the specified `figurespath` directory.
+"""
 function create_latent_umaps(X::AbstractMatrix, plotseed, Z::AbstractMatrix, model_name::String, ;
     figurespath::String=figurespath,
     image_type::String=".pdf",
@@ -162,7 +310,23 @@ function create_latent_umaps(X::AbstractMatrix, plotseed, Z::AbstractMatrix, mod
 
 end
 
-function normalized_scatter_top_values(vec, custom_labels; top_n=15, dim=k)
+
+"""
+    normalized_scatter_top_values(vec, labels; top_n=15, dim=k)
+
+This function plots a scatter plot of the top `top_n` values in the vector `vec`, along with their corresponding labels. The values are normalized by the maximum absolute value and sorted by absolute magnitude in descending order. The scatter plot is customized with x-axis labels, colors, and y-axis limits.
+
+## Arguments
+- `vec`: A vector of values.
+- `labels`: An array of labels corresponding to the values in `vec`.
+- `top_n`: The number of top values to plot. Default is 15.
+- `dim`: The dimension of the data. Default is `k`.
+
+## Returns
+- `p`: A `Plots.Plot` object representing the scatter plot.
+
+"""
+function normalized_scatter_top_values(vec, labels; top_n=15, dim=k)
     # Filter out zeros and get indices of nonzero elements
     non_zero_indices = findall(x -> x != 0, vec)
 
@@ -171,7 +335,7 @@ function normalized_scatter_top_values(vec, custom_labels; top_n=15, dim=k)
     end
 
     non_zero_values = vec[non_zero_indices]
-    selected_labels = custom_labels[non_zero_indices]
+    selected_labels = labels[non_zero_indices]
 
     # Normalize by the maximum absolute value
     normalized_values = non_zero_values / maximum(abs.(non_zero_values))
