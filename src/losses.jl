@@ -136,52 +136,52 @@ loss_wrapper(BAE::Autoencoder) = function(Xt::AbstractMatrix) loss(Xt, BAE) end
 # Loss functions for training BAE mode "jointLoss":
 #------------------------------
 """
-    combinedLoss(batch::AbstractMatrix{<:AbstractFloat}, BAE::Autoencoder, ϵ::Number, m::Int, zdim::Int, iter::Int)
+    jointLoss(batch::AbstractMatrix{<:AbstractFloat}, BAE::Autoencoder, ϵ::Number, m::Int, zdim::Int, iter::Int)
 
 Description:
 
-    Calculate a reconstruction loss (combinedLoss/jointLoss) for an autoencoder model, which consists of two components: A sequentially applied constraint componentwise boosting component (to each latent dimension in the latent space, defined by the output dimension of the encoder) and a reconstruction loss component. The sequentially applied boosting component modifies the autoencoder's encoder coefficients to encourage certain structural properties, i.e. disentanglement of latent dimensions, in the encoded representation. After modification of the encoder weights, the MSE of the autoencoder model with the updated encoder weights gets computed.
+    Calculate a reconstruction loss (jointLoss/jointLoss) for an autoencoder model, which consists of two components: A sequentially applied constraint componentwise boosting component (to each latent dimension in the latent space, defined by the output dimension of the encoder) and a reconstruction loss component. The sequentially applied boosting component modifies the autoencoder's encoder coefficients to encourage certain structural properties, i.e. disentanglement of latent dimensions, in the encoded representation. After modification of the encoder weights, the MSE of the autoencoder model with the updated encoder weights gets computed.
 
 Arguments:
 
-    - `batch::AbstractMatrix{<:AbstractFloat}`: A batch of input data samples for which to compute the combined loss.
+    - `batch::AbstractMatrix{<:AbstractFloat}`: A batch of input data samples for which to compute the joint loss.
     - `BAE::Autoencoder`: The autoencoder model, consisting of an encoder and a decoder.
     - `ϵ::Number`: A parameter controlling the step length of the updates computed via boosting for each latent dimension.
     - `m::Int`: The number of boosting steps to perform for each latent dimension.
     - `zdim::Int`: The desired dimensionality of the encoded representations (number of latent dimensions).
-    - `iter::Int`: Specifies the number of the current training epoch in which the function combinedLoss() is applied.
+    - `iter::Int`: Specifies the number of the current training epoch in which the function jointLoss() is applied.
 
 Returns:
 
-    - `rec_loss::Real`: The combined loss, which includes both the sequentially applied constraint boosting component and the reconstruction loss component.
+    - `rec_loss::Real`: The joint loss, which includes both the sequentially applied constraint boosting component and the reconstruction loss component.
 
 Example:
 
     ```julia
-    # Calculate the combined loss for a batch of input data using an autoencoder model
+    # Calculate the joint loss for a batch of input data using an autoencoder model
     autoencoder_model = Autoencoder(encoder_network, decoder_network)  # Example autoencoder model
     input_data_batch = rand(784, 100)  # Example: Batch of 100 784-dimensional input data samples
     boosting_step_length = 0.01
     num_boosting_steps = 10
     num_latent_dimensions = 32
     current_training_epoch = 100
-    combined_loss_value = combinedLoss(input_data_batch, autoencoder_model, boosting_step_length, num_boosting_steps, num_latent_dimensions, current_training_epoch)
+    joint_loss_value = jointLoss(input_data_batch, autoencoder_model, boosting_step_length, num_boosting_steps, num_latent_dimensions, current_training_epoch)
     ```
 
 Notes:
 
-    - The `combinedLoss` function calculates a combined loss that consists of two components:
+    - The `jointLoss` function calculates a joint loss that consists of two components:
         1. A sequentially applied constraint componentwise boosting component that encourages specific properties in the encoded representations. This component modifies the encoder coefficients of the autoencoder model.
         2. A reconstruction loss component (mean squared error) that measures the difference between the original input data and the data reconstructed by the autoencoder model.
 
-    - The sequentially applied constraint componentwise boosting component is applied via an external function `seq_constr_compL2Boost_combinedLoss`, and the encoder weights of the autoencoder `BAE` are modified accordingly.
+    - The sequentially applied constraint componentwise boosting component is applied via an external function `seq_constr_compL2Boost_jointLoss`, and the encoder weights of the autoencoder `BAE` are modified accordingly.
 
-    - The combinedLoss/jointLoss may be used for training a BAE (autoencoder) with a linear encoder. By applying a gradient-based optimization scheme (e.g. stochastic gradient descent) for training the BAE, the encoder weights are getting updated in the forward pass of combinedLoss and the decoder parameters are updated using computed gradient information from the backward pass.
+    - The jointLoss/jointLoss may be used for training a BAE (autoencoder) with a linear encoder. By applying a gradient-based optimization scheme (e.g. stochastic gradient descent) for training the BAE, the encoder weights are getting updated in the forward pass of jointLoss and the decoder parameters are updated using computed gradient information from the backward pass.
 
 """
-function combinedLoss(batch::AbstractMatrix{<:AbstractFloat}, BAE::Autoencoder, ϵ::Number, m::Int, zdim::Int, iter::Int) 
+function jointLoss(batch::AbstractMatrix{<:AbstractFloat}, BAE::Autoencoder, ϵ::Number, m::Int, zdim::Int, iter::Int) 
 
-    BAE.encoder.coeffs = seq_constr_compL2Boost_combinedLoss(batch, BAE, ϵ, zdim, m, iter)
+    BAE.encoder.coeffs = seq_constr_compL2Boost_jointLoss(batch, BAE, ϵ, zdim, m, iter)
 
     rec_loss = Flux.mse(BAE(batch), batch) 
 
@@ -190,11 +190,11 @@ end
 
 
 """
-    combinedLoss_wrapper(BAE::Autoencoder, ϵ::Number, m::Int, zdim::Int, iter::Int)
+    jointLoss_wrapper(BAE::Autoencoder, ϵ::Number, m::Int, zdim::Int, iter::Int)
 
 Description:
 
-    Create a batch-wise loss function wrapper for an autoencoder model with the combinedLoss function (for more details see documentation of combinedLoss). The wrapper function accepts a batch of input data samples and computes the combined loss for the entire batch.
+    Create a batch-wise loss function wrapper for an autoencoder model with the jointLoss function (for more details see documentation of jointLoss). The wrapper function accepts a batch of input data samples and computes the joint loss for the entire batch.
 
 Arguments:
 
@@ -202,11 +202,11 @@ Arguments:
     - `ϵ::Number`: A parameter controlling the step length of the updates computed via boosting for each latent dimension.
     - `m::Int`: The number of boosting steps to perform for each latent dimension.
     - `zdim::Int`: The desired dimensionality of the encoded representations (number of latent dimensions).
-    - `iter::Int`: Specifies the number of the current training epoch in which the function combinedLoss() is applied.
+    - `iter::Int`: Specifies the number of the current training epoch in which the function jointLoss() is applied.
 
 Returns:
 
-    - `loss_function::Function`: A loss function that can be applied to a batch of input data to calculate the combined loss.
+    - `loss_function::Function`: A loss function that can be applied to a batch of input data to calculate the joint loss.
 
 Example:
 
@@ -217,25 +217,25 @@ Example:
     num_boosting_steps = 10
     num_latent_dimensions = 32
     current_training_epoch = 100
-    batch_loss_function = combinedLoss_wrapper(autoencoder_model, boosting_step_length, num_boosting_steps, num_latent_dimensions, current_training_epoch)
+    batch_loss_function = jointLoss_wrapper(autoencoder_model, boosting_step_length, num_boosting_steps, num_latent_dimensions, current_training_epoch)
 
-    # Calculate the combined loss for a batch of input data using the batch loss function
+    # Calculate the joint loss for a batch of input data using the batch loss function
     input_data_batch = rand(784, 100)  # Example: Batch of 100 784-dimensional input data samples
-    combined_loss_value = batch_loss_function(input_data_batch)
+    joint_loss_value = batch_loss_function(input_data_batch)
     ```
 
 Notes:
 
-    - The `combinedLoss_wrapper` function creates a closure that encapsulates the autoencoder model and the parameters for the combined loss computation. It returns a batch-wise loss function that can be applied to a batch of input data.
+    - The `jointLoss_wrapper` function creates a closure that encapsulates the autoencoder model and the parameters for the joint loss computation. It returns a batch-wise loss function that can be applied to a batch of input data.
 
-    - The batch-wise loss function calculates the combined loss for the entire batch, including both a sequentially applied constraint componentwise boosting component and a reconstruction loss component. The boosting component is optimized using an external function `seq_constr_compL2Boost_combinedLoss`.
+    - The batch-wise loss function calculates the joint loss for the entire batch, including both a sequentially applied constraint componentwise boosting component and a reconstruction loss component. The boosting component is optimized using an external function `seq_constr_compL2Boost_jointLoss`.
 
-    - The combinedLoss/jointLoss may be used for training a BAE (autoencoder) with a linear encoder. By applying a gradient-based optimization scheme (e.g. stochastic gradient descent) for training the BAE, the encoder weights are getting updated in the forward pass of combinedLoss and the decoder parameters are updated using computed gradient information from the backward pass.
+    - The jointLoss/jointLoss may be used for training a BAE (autoencoder) with a linear encoder. By applying a gradient-based optimization scheme (e.g. stochastic gradient descent) for training the BAE, the encoder weights are getting updated in the forward pass of jointLoss and the decoder parameters are updated using computed gradient information from the backward pass.
 
-    - This wrapper is useful when you want to efficiently compute the combined loss for multiple input samples in a batch.
+    - This wrapper is useful when you want to efficiently compute the joint loss for multiple input samples in a batch.
 
 """
-combinedLoss_wrapper(BAE::Autoencoder, ϵ::Number, m::Int, zdim::Int, iter::Int) = function(batch) combinedLoss(batch, BAE, ϵ, m, zdim, iter) end 
+jointLoss_wrapper(BAE::Autoencoder, ϵ::Number, m::Int, zdim::Int, iter::Int) = function(batch) jointLoss(batch, BAE, ϵ, m, zdim, iter) end 
 
 
 
@@ -257,7 +257,7 @@ Arguments:
 
 Returns:
 
-    - `loss::Real`: The combined loss, including the reconstruction loss and L1 regularization term.
+    - `loss::Real`: The reconstruction loss with an added L1 regularization term for the encoder weights.
 
 Example:
 
@@ -288,7 +288,7 @@ loss_L1reg(Xt::AbstractMatrix, AE::Autoencoder, α::AbstractFloat) = Flux.mse(AE
 
 Description:
 
-    Create a loss function wrapper with L1 regularization for an autoencoder model witha single-layer encoder. The wrapper function accepts input data and computes the combined loss, including a mean squared error (MSE) reconstruction loss and an L1 regularization term applied to the single-layer encoder's weights.
+    Create a loss function wrapper with L1 regularization for an autoencoder model witha single-layer encoder. The wrapper function accepts input data and computes the mean squared error (MSE) reconstruction loss with an additional L1 regularization term applied to the single-layer encoder's weights.
 
 Arguments:
 
@@ -297,29 +297,7 @@ Arguments:
 
 Returns:
 
-    - `loss_function::Function`: A loss function that can be used to calculate the combined loss for a given input data.
-
-Example:
-
-    ```julia
-    # Create a loss function wrapper with L1 regularization for a given autoencoder model
-    autoencoder_model = Autoencoder(encoder_network, decoder_network)  # Example autoencoder model
-    regularization_parameter = 0.001
-    loss_function = loss_wrapper_L1reg(autoencoder_model, regularization_parameter)
-
-    # Calculate the combined loss for input data using the loss function
-    input_data = rand(784, 100)  # Example: 784-dimensional input data
-    combined_loss_value = loss_function(input_data)
-    ```
-
-Notes:
-
-    - The `loss_wrapper_L1reg` function creates a closure that encapsulates the autoencoder model and the L1 regularization parameter. It returns a loss function tailored to that specific autoencoder and regularization.
-
-    - The returned loss function accepts input data and calculates the combined loss, which includes both a mean squared error (MSE) reconstruction loss and an L1 regularization term applied to the single-layer encoder's weights.
-
-    - L1 regularization encourages sparsity in the single-layer encoder's weights by shrinking many of the non-informative weights towards zero.
-
+    - `loss_function::Function`: A loss function that can be used to calculate the MSE given some data and an autoencoder with an additional L1 regularization term applied to the single-layer encoder's weights.
 """
 loss_wrapper_L1reg(AE::Autoencoder, α::AbstractFloat) = function(Xt::AbstractMatrix) loss_L1reg(Xt, AE, α) end
 
@@ -379,7 +357,7 @@ end
 
 Description:
 
-    Calculate a combined loss function for an autoencoder model with correlation-based regularization (CORREG). The loss function includes a mean squared error (MSE) reconstruction loss and a regularization term based on the sum of squared pairwise sample (Pearson) correlation coefficients (CORPEN) between columns of the encoder's output matrix.
+    Calculate a loss function for an autoencoder model with correlation-based regularization (CORREG). The loss function includes a mean squared error (MSE) reconstruction loss and a regularization term based on the sum of squared pairwise sample (Pearson) correlation coefficients (CORPEN) between columns of the encoder's output matrix.
 
 Arguments:
 
@@ -389,12 +367,12 @@ Arguments:
 
 Returns:
 
-    - `loss::AbstractFloat`: The combined loss, including the reconstruction loss and CORREG regularization term.
+    - `loss::AbstractFloat`: The loss, including the reconstruction loss and CORREG term.
 
 Example:
 
     ```julia
-    # Calculate the combined loss with CORREG regularization for a given autoencoder model and input data
+    # Calculate the loss with CORREG for a given autoencoder model and input data
     autoencoder_model = Autoencoder(encoder_network, decoder_network)  # Example autoencoder model
     input_data = rand(784, 100)  # Example: 784-dimensional input data
     regularization_parameter = 0.001
@@ -429,28 +407,6 @@ Arguments:
 
 Returns:
 
-    - `loss_function::Function`: A loss function that can be used to calculate the combined loss with CORREG regularization for a given input data.
-
-Example:
-
-    ```julia
-    # Create a loss function wrapper with CORREG regularization for a given autoencoder model
-    autoencoder_model = Autoencoder(encoder_network, decoder_network)  # Example autoencoder model
-    regularization_parameter = 0.001
-    loss_function = loss_wrapper_correg(autoencoder_model, regularization_parameter)
-
-    # Calculate the combined loss with CORREG regularization for input data using the loss function
-    input_data = rand(784, 100)  # Example: 784-dimensional input data
-    combined_loss_value = loss_function(input_data)
-    ```
-
-Notes:
-
-    - The `loss_wrapper_correg` function creates a closure that encapsulates the autoencoder model and the CORREG regularization parameter. It returns a loss function tailored to that specific autoencoder and regularization.
-
-    - The returned loss function accepts input data and calculates the combined loss, including both a mean squared error (MSE) reconstruction loss and a correlation-based regularization term (CORREG) applied to the encoder's outputs.
-
-    - CORREG encourages the encoder's outputs to exhibit certain correlation properties, which can be useful for controlling the representations learned by the autoencoder.
-
+    - `loss_function::Function`: A loss function that can be used to calculate the loss with CORREG for a given input data.
 """
 loss_wrapper_correg(AE::Autoencoder, α) = function(Xt::AbstractMatrix) loss_correg(Xt, AE, α) end

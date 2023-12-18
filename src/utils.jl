@@ -1,3 +1,7 @@
+#------------------------------
+# This file contains utility functions:
+#------------------------------
+
 function find_zero_columns(X::AbstractMatrix{<:Number}) 
     v = vec(sum(abs.(X), dims=1))
     zero_cols = findall(x->x==0, v)

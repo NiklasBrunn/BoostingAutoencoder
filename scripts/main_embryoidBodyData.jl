@@ -46,7 +46,7 @@ if !isdir(figurespath)
 end
 
 #---Include functions:
-include(srcpath * "utility.jl");
+include(srcpath * "utils.jl");
 include(srcpath * "model.jl");
 include(srcpath * "losses.jl");
 include(srcpath * "training.jl");

@@ -1,3 +1,7 @@
+#------------------------------
+# This file contains functions for generating simulated scRNA-seq-like datasets:
+#------------------------------
+
 function addstages!(X,stageno;stagen=1,stagep=2,overlap=1,blockprob=1.0)
     curp = 1
     curn = 1

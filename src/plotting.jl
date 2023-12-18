@@ -1,3 +1,7 @@
+#------------------------------
+# This file contains the functions for generating the plots of the results: 
+#------------------------------
+
 function vegaheatmap(Z::AbstractMatrix; 
     path::String=joinpath(@__DIR__, "../") * "heatmap.pdf", 
     Title::String=" ",

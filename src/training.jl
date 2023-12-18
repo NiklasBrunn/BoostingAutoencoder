@@ -1,5 +1,9 @@
-#---training function for the BAE: #TODO! multiple dispatch #TODO! Add timeBAE
-function trainBAE(X, BAE::Autoencoder; mode::String="alternating", time_series::Bool=false, ϵ::Number=0.02, ν::Number=0.01, zdim::Int=6, m::Int=1, batchsize::Int=size(X, 1), epochs::Int=50)
+#------------------------------
+# This file contains the training function for the BAE and timeBAE:
+#------------------------------
+
+#---training function for the BAE: #TODO! multiple dispatch 
+function trainBAE(X::AbstractArray, BAE::Autoencoder; mode::String="alternating", time_series::Bool=false, ϵ::Number=0.02, ν::Number=0.01, zdim::Int=6, m::Int=1, batchsize::Int=size(X, 1), epochs::Int=50)
 
     if time_series == false
         #---BAE:
