@@ -17,7 +17,7 @@ We combine the advantages of two machine learning approaches, namely autoencoder
 
 ![](figures/ModelOverview.png)
 
-We illustrate the approach in a scRNA-seq dataset of cortical neurons, where it captures different cell types in distinct dimensions and identifies corresponding marker genes. In particular, we could also capture very small cell groups. Similarly, encoding assumptions that reflect the experimental design allowed for extracting temporal development patterns and corresponding gene programs in an application to time-series data. These examples indicate that it might be more generally useful to incorporate structural knowledge into dimension reduction for scRNA-seq data.  
+We illustrate the approach in a scRNA-seq dataset of cortical neurons, where it captures different cell types in distinct dimensions and identifies corresponding marker genes. In particular, we could also capture very small cell groups. Similarly, encoding assumptions that reflect the experimental design allowed for extracting temporal development patterns and corresponding gene programs in an application to time-series data. These examples demonstrate the general benefit of incorporating structural knowledge into dimension reduction for scRNA-seq data.  
 
 ## Repository structure
 The `scripts` subfolder consists of scripts for:
