@@ -3,7 +3,7 @@
 ## Overwiev
 This GitHub repository contains all the code and scripts for defining and training a boosting autoencoder (BAE), and to reproduce the results presented in our manuscript *Infusing structural assumptions into dimension reduction for single-cell RNA sequencing data to identify small gene sets*.
 
-![](figures/ModelOverview.pdf)
+[ModelOverview.pdf](https://github.com/NiklasBrunn/BoostingAutoencoder/files/13810416/ModelOverview.pdf)
 
 ## Author information for the manuscript
 > First/corresponding authors: Niklas Brunn<sup>12</sup>, Maren Hackenberg<sup>12</sup><br>
