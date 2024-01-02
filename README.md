@@ -12,9 +12,12 @@ This GitHub repository contains all the code and scripts to define and train a b
 > <sup>3</sup> Centre for Integrative Biological Signaling Studies (CIBSS), University of Freiburg, Germany
 
 ## Covered topics
-
+Dimension reduction approaches are widely used for exploring cellular heterogeneity in single-cell RNA sequencing (scRNA-seq) data, e.g., for identifying two-dimensional visual representations where cell groups can be disentangled, followed by post-hoc analyses. While most approaches are data-driven or are challenging to interprete, it might still be useful to incorporate assumptions that reflect intuition on the underlying structure or the experimental design already as part of the dimension reduction. E.g., dimensions that help to distinguish between cell groups intuitively should be characterized by distinct small sets of genes, or the design in a time-series experiment should be incorporated such that temporal changes of cell states are characterized by gradual changes in corresponding gene sets.  
+We combine the advantages of two machine learning approaches, namely autoencoders for dimension reduction via deep learning and boosting for formalizing assumptions. Specifically, we use a componentwise boosting approach, which selects small sets of characteristic genes for each dimension, and allows for tailoring the selection logic to encode further assumptions, such as distinct cell groups or temporal patterns. Our approach facilitates interpretability by selecting different small sets of genes during optimization, where the gene sets explain the learned patterns in latent dimensions.
 
 ![](figures/ModelOverview.png)
+
+We illustrate the approach in a scRNA-seq dataset of cortical neurons, where it captures different cell types in distinct dimensions and identifies corresponding marker genes. In particular, we could also capture very small cell groups. Similarly, encoding assumptions that reflect the experimental design allowed for extracting temporal development patterns and corresponding gene programs in an application to time-series data. These examples indicate that it might be more generally useful to incorporate structural knowledge into dimension reduction for scRNA-seq data.  
 
 ## Repository structure
 The `scripts` subfolder consists of scripts for:
