@@ -13,3 +13,6 @@ This GitHub repository contains all the code and scripts for defining and traini
 
 ## Covered topics
 
+## Repository structure
+
+## Instructions for running code
