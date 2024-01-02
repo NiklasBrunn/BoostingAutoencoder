@@ -18,6 +18,10 @@ This GitHub repository contains all the code and scripts for defining and traini
 
 ## Repository structure
 
+1. Preprocessing
+2. Simulation
+3. BAE application
+
 ## Instructions for running code
 To run the julia scripts, Julia (we used v1.6.7) has to be [downloaded](https://julialang.org/downloads/) and installed. The required packages and their versions are specified in the `Project.toml` and `Manifest.toml` files in the main folder and automatically loaded/installed at the beginning of each script with the `Pkg.activate()` and `Pkg.instantiate()` commands. See [here](https://pkgdocs.julialang.org/v1.2/environments/) for more info on Julia environments. 
 
