@@ -239,11 +239,6 @@ create_latent_umaps(st_dataMat, plotseed, Z_compL2Boost, "compL2Boost";
                     precomputed=true, embedding=embedding_compL2Boost, save_plot=true,
                     legend_title="Representation value", image_type=".pdf"
 );
-create_latent_umaps(st_dataMat, plotseed, Z_compL2Boost, "compL2Boost"; 
-                    figurespath=figurespath * "/compL2Boost_(pcaUMAP)",
-                    precomputed=true, embedding=embedding_pcaUMAP, save_plot=true, 
-                    legend_title="Representation value", image_type=".pdf"
-);
 
 
 

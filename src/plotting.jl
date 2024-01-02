@@ -314,7 +314,7 @@ end
 """
     normalized_scatter_top_values(vec, labels; top_n=15, dim=k)
 
-This function plots a scatter plot of the top `top_n` values in the vector `vec`, along with their corresponding labels. The values are normalized by the maximum absolute value and sorted by absolute magnitude in descending order. The scatter plot is customized with x-axis labels, colors, and y-axis limits.
+This function plots a scatter plot of the top `top_n` values in the vector `vec`, along with their corresponding labels. The values are normalized by the maximum absolute value and sorted by absolute magnitude in descending order (from left to right in the plot). The scatter plot is customized with a y-axis label, x-ticks, colors, and y-axis limits.
 
 ## Arguments
 - `vec`: A vector of values.
@@ -358,13 +358,16 @@ function normalized_scatter_top_values(vec, labels; top_n=15, dim=k)
     
     # Plot scatter plot with custom x-axis labels and colors
     p = scatter(1:top_n, top_values, 
-                size=(600, 500),
-                xlabel="Gene", 
+                size=(600, 600),
+                #xlabel="Gene", 
                 ylabel="Maximum-normalized coefficient", 
+                guidefontsize=14,
                 title="Top $(top_n) genes in dimension $(dim) ($(length(non_zero_indices)) nonzero genes)",
+                titlefontsize=14,
                 legend=false, 
-                markersize=6,
+                markersize=8,
                 xticks=(1:top_n, top_labels),
+                tickfontsize=14,
                 ylims=(y_lower_limit, y_upper_limit),
                 color=colors,
                 grid=false,

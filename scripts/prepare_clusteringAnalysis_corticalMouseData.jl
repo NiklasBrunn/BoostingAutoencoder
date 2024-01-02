@@ -24,7 +24,6 @@ using LinearAlgebra;
 using DataFrames;
 using UMAP;
 using StatsBase;
-using Distances;
 using Distributions;
 using CSV;
 using ProgressMeter;
@@ -35,16 +34,12 @@ using ProgressMeter;
 # Define paths and include functions:
 #------------------------------
 #---Set paths:
-projectpath = joinpath(@__DIR__, "../../../"); 
+projectpath = joinpath(@__DIR__, "../"); 
 srcpath = projectpath * "src/";
-datapath = projectpath * "data/corticalMouseData_clusteringAnalysis/";
-if !isdir(datapath)
-    # Create the folder if it does not exist
-    mkdir(datapath)
-end
+datapath = projectpath * "data/corticalMouseData/";
 
 #---Include functions:
-include(srcpath * "utility.jl");
+include(srcpath * "utils.jl");
 include(srcpath * "model.jl");
 include(srcpath * "losses.jl");
 include(srcpath * "training.jl");

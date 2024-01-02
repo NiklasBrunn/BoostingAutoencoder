@@ -46,7 +46,7 @@ function trainBAE(X::AbstractArray, BAE::Autoencoder; mode::String="alternating"
             @showprogress for iter in 1:epochs
                 batch = Flux.Data.DataLoader(X', batchsize=batchsize, shuffle=true) 
                                 
-                Flux.train!(combinedLoss_wrapper(BAE, ϵ, m, zdim, iter), ps, batch, opt) 
+                Flux.train!(jointLoss_wrapper(BAE, ϵ, m, zdim, iter), ps, batch, opt) 
             end
     
         end
@@ -102,7 +102,7 @@ function trainBAE(X::AbstractArray, BAE::Autoencoder; mode::String="alternating"
                 @showprogress for iter in 1:epochs
                     batch = Flux.Data.DataLoader(X[t]', batchsize=batchsize, shuffle=true) 
                                         
-                    Flux.train!(combinedLoss_wrapper(BAE, ϵ, m, zdim, iter), ps, batch, opt) 
+                    Flux.train!(jointLoss_wrapper(BAE, ϵ, m, zdim, iter), ps, batch, opt) 
                 end
 
                 B[:, t*zdim+1: (t+1)*zdim] = BAE.encoder.coeffs - B[:, (t-1)*zdim+1: t*zdim]

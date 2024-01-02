@@ -127,13 +127,13 @@ embedding_BAEUMAP = generate_umap(Z_BAE, plotseed);
 create_colored_umap_plot(st_dataMat, ones(size(st_dataMat, 1)), plotseed; embedding=embedding_BAEUMAP, 
                          precomputed=true, save_plot=true, path=figurespath * "/mousedata_(BAE)umap.pdf", 
                          colorlabel="Celltype", legend_title="Cell type", legend_symbolSize=150.0,
-                         Title="UMAP embedding of SST interneurons (BAE latent representation)",
+                         Title="UMAP embedding of BAE latent representation",
                          title_fontSize=15.0, marker_size="60"
 );
 create_colored_umap_plot(st_dataMat, ones(size(st_dataMat, 1)), plotseed; embedding=embedding_pcaUMAP, 
                          precomputed=true, save_plot=true, path=figurespath * "/mousedata_(PCA)umap.pdf", 
                          colorlabel="Celltype", legend_title="Cell type", legend_symbolSize=150.0,
-                         Title="UMAP embedding of SST interneurons (First 50 PCA components)",
+                         Title="UMAP embedding of first 50 principal components",
                          title_fontSize=15.0, marker_size="60"
 );
 
