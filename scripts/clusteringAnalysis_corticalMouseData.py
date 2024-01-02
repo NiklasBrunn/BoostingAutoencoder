@@ -24,7 +24,7 @@ sc.settings.set_figure_params(dpi=80, facecolor="white", frameon=False)
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 projectpath = os.path.join(cur_dir, '../../../')
-datapath = projectpath + 'data/corticalMouseData_clusteringAnalysis/';
+datapath = projectpath + 'data/corticalMouseData/';
 figurespath = projectpath + 'figures/corticalMouseData_clusteringAnalysis/';
 if not os.path.exists(figurespath):
     # Create the folder if it does not exist
