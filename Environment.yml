@@ -1,4 +1,4 @@
-name: BAE1
+name: BAE
 channels:
   - conda-forge
   - defaults
