@@ -80,33 +80,37 @@ timepoints = Int32.(size(L, 1));
 #---Create and save data matrices and plots of the data matrices:
 #writedlm(datapath * "sim3cellgroups3stagesScRNAseqData_binarized.txt", X_dicho);
 vegaheatmap(X_dicho; 
-    path=figurespath * "/sim3cellgroups3stagesScRNAseqData_binarized.pdf", 
+    path=figurespath * "/sim3cellgroups3stagesScRNAseqData_binarized.svg", 
     xlabel="Gene", ylabel="Cell", legend_title="Gene expression",
-    color_field="value:o", scheme="paired", save_plot=true
+    color_field="value:o", scheme="paired", save_plot=true, 
+    legend_symbolSize=300.0, legend_labelFontSize=24.0, legend_titleFontSize=24.0,
+    axis_labelFontSize=18.0, axis_titleFontSize=22.0
 );
 
 for t in 1:length(L_dicho)
     #writedlm(datapath * "sim3cellgroups3stagesScRNAseqData_tp$(t)_binarized.txt", L_dicho[t]);
     vegaheatmap(L_dicho[t]; 
-        path=figurespath * "/sim3cellgroups3stagesScRNAseqData_tp$(t)_binarized.pdf", 
-        xlabel="Gene", ylabel="Cell", legend_title="Gene expression",
+        path=figurespath * "/sim3cellgroups3stagesScRNAseqData_tp$(t)_binarized.svg", 
+        xlabel="Gene", ylabel="Cell", legend_title="Gene expression", 
         color_field="value:o", scheme="paired", save_plot=true
     );
     #writedlm(datapath * "sim3cellgroups3stagesScRNAseqData_tp$(t)_binarized.txt", L_dicho[t]);
     vegaheatmap(L_dicho[t]; 
-        path=figurespath * "/sim3cellgroups3stagesScRNAseqData_tp$(t)_binarized_withTitle.pdf", 
+        path=figurespath * "/sim3cellgroups3stagesScRNAseqData_tp$(t)_binarized_withTitle.svg", 
         xlabel="Gene", ylabel="Cell", Title="Time point $(t)", legend_title="Gene expression",
-        color_field="value:o", scheme="paired", save_plot=true
+        color_field="value:o", scheme="paired", save_plot=true, title_fontSize=28.0,
+        legend_symbolSize=300.0, legend_labelFontSize=24.0, legend_titleFontSize=22.0,
+        axis_labelFontSize=18.0, axis_titleFontSize=22.0
     );
     #writedlm(datapath * "sim3cellgroups3stagesScRNAseqData_tp$(t)_standardized.txt", L_st[t]);
     vegaheatmap(L_st[t]; 
-        path=figurespath * "/sim3cellgroups3stagesScRNAseqData_tp$(t)_standardized.pdf", 
-        xlabel="Gene", ylabel="Cell", legend_title="Gene expression",
+        path=figurespath * "/sim3cellgroups3stagesScRNAseqData_tp$(t)_standardized.svg", 
+        xlabel="Gene", ylabel="Cell", legend_title="Gene expression", 
         color_field="value", scheme="inferno", save_plot=true
     );
     #writedlm(datapath * "sim3cellgroups3stagesScRNAseqData_tp$(t)_standardized_rescaleVal$(rescale_factor).txt", L_st[t]);
     vegaheatmap(L[t]; 
-        path=figurespath * "/sim3cellgroups3stagesScRNAseqData_tp$(t)_standardized_rescaleVal$(rescale_factor).pdf", 
+        path=figurespath * "/sim3cellgroups3stagesScRNAseqData_tp$(t)_standardized_rescaleVal$(rescale_factor).svg", 
         xlabel="Gene", ylabel="Cell", legend_title="Gene expression",
         color_field="value", scheme="inferno", save_plot=true
     );
@@ -167,40 +171,54 @@ absCor_Z_perm = abs.(cor(Z_perm, dims=1));
 
 #---Create and save plots:
 vegaheatmap(B'; 
-    path=figurespath * "timeBAE_encoderWeightMatrix_zdim$(zdim)_epochs$(epochs)_batchsize$(batchsize).pdf", 
+    path=figurespath * "timeBAE_encoderWeightMatrix_zdim$(zdim)_epochs$(epochs)_batchsize$(batchsize).svg", 
     xlabel="Gene", ylabel="Latent Dimension", legend_title="Weight value",
-    color_field="value", scheme="blueorange", save_plot=true, set_domain_mid=true
+    color_field="value", scheme="blueorange", save_plot=true, set_domain_mid=true,
+    legend_labelFontSize=24.0, legend_titleFontSize=22.0,
+    axis_labelFontSize=18.0, axis_titleFontSize=22.0
 );
 vegaheatmap(Z; 
-    path=figurespath * "timeBAE_latentRep_zdim$(zdim)_epochs$(epochs)_batchsize$(batchsize).pdf", 
-    xlabel="Latent Dimension", ylabel="Observation", legend_title="Representation value",
-    color_field="value", scheme="blueorange", save_plot=true, set_domain_mid=true
+    path=figurespath * "timeBAE_latentRep_zdim$(zdim)_epochs$(epochs)_batchsize$(batchsize).svg", 
+    xlabel="Latent Dimension", ylabel="Cell", legend_title="Representation value",
+    color_field="value", scheme="blueorange", save_plot=true, set_domain_mid=true,
+    legend_labelFontSize=24.0, legend_titleFontSize=22.0,
+    axis_labelFontSize=18.0, axis_titleFontSize=22.0
 );
 vegaheatmap(absCor_Z; 
-    path=figurespath * "timeBAE_latentDimsCor_zdim$(zdim)_epochs$(epochs)_batchsize$(batchsize).pdf.pdf", 
+    path=figurespath * "timeBAE_latentDimsCor_zdim$(zdim)_epochs$(epochs)_batchsize$(batchsize).svg", 
     xlabel="Latent Dimension", ylabel="Latent Dimension",  legend_title="Correlation",
-    color_field="value", scheme="reds", save_plot=true
+    color_field="value", scheme="reds", save_plot=true,
+    legend_labelFontSize=24.0, legend_titleFontSize=22.0,
+    axis_labelFontSize=18.0, axis_titleFontSize=22.0
 );
 vegaheatmap(B_perm'; 
-    path=figurespath * "perm_timeBAE_encoderWeightMatrix_zdim$(zdim)_epochs$(epochs)_batchsize$(batchsize).pdf", 
+    path=figurespath * "perm_timeBAE_encoderWeightMatrix_zdim$(zdim)_epochs$(epochs)_batchsize$(batchsize).svg", 
     xlabel="Gene", ylabel="Latent Dimension", legend_title="Weight value",
-    color_field="value", scheme="blueorange", save_plot=true, set_domain_mid=true
+    color_field="value", scheme="blueorange", save_plot=true, set_domain_mid=true,
+    legend_labelFontSize=24.0, legend_titleFontSize=22.0,
+    axis_labelFontSize=18.0, axis_titleFontSize=22.0
 );
 vegaheatmap(Z_perm; 
-    path=figurespath * "perm_timeBAE_latentRep_zdim$(zdim)_epochs$(epochs)_batchsize$(batchsize).pdf", 
-    xlabel="Latent Dimension", ylabel="Observation", legend_title="Representation value",
-    color_field="value", scheme="blueorange", save_plot=true, set_domain_mid=true
+    path=figurespath * "perm_timeBAE_latentRep_zdim$(zdim)_epochs$(epochs)_batchsize$(batchsize).svg", 
+    xlabel="Latent Dimension", ylabel="Cell", legend_title="Representation value", Width=400,
+    color_field="value", scheme="blueorange", save_plot=true, set_domain_mid=true,
+    legend_labelFontSize=24.0, legend_titleFontSize=16.0,
+    axis_labelFontSize=18.0, axis_titleFontSize=22.0
 );
 vegaheatmap(absCor_Z_perm; 
-    path=figurespath * "perm_timeBAE_latentDimsCor_zdim$(zdim)_epochs$(epochs).pdf.pdf", 
+    path=figurespath * "perm_timeBAE_latentDimsCor_zdim$(zdim)_epochs$(epochs).svg", 
     xlabel="Latent Dimension", ylabel="Latent Dimension", legend_title="Correlation",
-    color_field="value", scheme="reds", save_plot=true
+    color_field="value", scheme="reds", save_plot=true,
+    legend_labelFontSize=24.0, legend_titleFontSize=22.0,
+    axis_labelFontSize=20.0, axis_titleFontSize=22.0
 );
 
 for t in 1:length(L)
     vegaheatmap(B[:,(t-1)*zdim+1:(t-1)*zdim+zdim]'; 
-        path=figurespath * "timeBAE_encoderWeightMatrix_tp$(t)_zdim$(zdim)_epochs$(epochs)_batchsize$(batchsize).pdf", 
-        xlabel="Gene", ylabel="Latent Dimension", legend_title="Weight value",
-        color_field="value", scheme="blueorange", save_plot=true, set_domain_mid=true
+        path=figurespath * "timeBAE_encoderWeightMatrix_tp$(t)_zdim$(zdim)_epochs$(epochs)_batchsize$(batchsize).svg", 
+        xlabel="Gene", ylabel="Latent Dimension", legend_title="Weight",
+        color_field="value", scheme="blueorange", save_plot=true, set_domain_mid=true,
+        legend_labelFontSize=24.0, legend_titleFontSize=22.0,
+        axis_labelFontSize=18.0, axis_titleFontSize=22.0
     );
 end
