@@ -125,37 +125,36 @@ embedding_BAEUMAP = generate_umap(Z_BAE, plotseed);
 
 
 create_colored_umap_plot(st_dataMat, ones(size(st_dataMat, 1)), plotseed; embedding=embedding_BAEUMAP, 
-                         precomputed=true, save_plot=true, path=figurespath * "/mousedata_(BAE)umap.pdf", 
+                         precomputed=true, save_plot=true, path=figurespath * "/mousedata_(BAE)umap.svg", 
                          colorlabel="Celltype", legend_title="Cell type", legend_symbolSize=150.0,
-                         Title="UMAP embedding of BAE latent representation",
-                         title_fontSize=15.0, marker_size="60"
+                         Title="UMAP embedding of \n BAE latent representation", marker_size="60"
 );
 create_colored_umap_plot(st_dataMat, ones(size(st_dataMat, 1)), plotseed; embedding=embedding_pcaUMAP, 
-                         precomputed=true, save_plot=true, path=figurespath * "/mousedata_(PCA)umap.pdf", 
+                         precomputed=true, save_plot=true, path=figurespath * "/mousedata_(PCA)umap.svg", 
                          colorlabel="Celltype", legend_title="Cell type", legend_symbolSize=150.0,
-                         Title="UMAP embedding of first 50 principal components",
-                         title_fontSize=15.0, marker_size="60"
+                         Title="UMAP embedding of \n first 50 principal components", marker_size="60"
 );
 
-create_latent_umaps(st_dataMat, plotseed, Z_BAE, "BAE"; 
+create_latent_umaps(st_dataMat, plotseed, Z_BAE; 
                     figurespath=figurespath * "/BAE_(BAEUMAP)",
-                    precomputed=true, embedding=embedding_BAEUMAP, save_plot=true,
-                    legend_title="Representation value", image_type=".pdf",
-                    marker_size="60"
+                    precomputed=true, embedding=embedding_BAEUMAP, save_plot=true, 
+                    legend_title="", image_type=".svg", marker_size="150"
 );
 
 
 #---Creating Scatterplots showing top selected genes per latent dimension:
 for l in 1:zdim
     pl = normalized_scatter_top_values(B_BAE[:, l], genenames; top_n=15, dim=l)
-    savefig(pl, figurespath * "scatterplot_genes_BAE_latdim$(l).pdf")
+    savefig(pl, figurespath * "scatterplot_genes_BAE_latdim$(l).svg")
 end
 
 
 #---Create cor-heatmap between BAE latent dimensions:
 abscor_latrep_BAE = abs.(cor(Z_BAE, Z_BAE));
 
-vegaheatmap(abscor_latrep_BAE; path=figurespath * "/abscor_latentrep_BAE.pdf", 
+vegaheatmap(abscor_latrep_BAE; path=figurespath * "/abscor_latentrep_BAE.svg", 
             xlabel="Latent dimension", ylabel="Latent dimension",  legend_title="Correlation", 
-            scheme="reds", save_plot=true
+            scheme="reds", save_plot=true, legend_titleFontSize=28.0, axis_labelFontSize=24.0,
+            axis_titleFontSize=28.0, legend_labelFontSize=24.0, legend_gradientThickness=25.0,
+            legend_gradientLength=280.0
 );
