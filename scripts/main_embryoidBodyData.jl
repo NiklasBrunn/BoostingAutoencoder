@@ -167,36 +167,36 @@ end
 
 #---Create a UMAP plot of cells colored by measurement time points:
 create_colored_umap_plot(X_st, timepoints_plot, plotseed; embedding=EB_umap_coords, 
-                         precomputed=true, save_plot=true, path=figurespath * "/embryoidBodyData_umap_colBy_timepoints.pdf", 
-                         colorlabel="Timepoint", legend_title="Time point", legend_symbolSize=150.0, marker_size="10", 
-                         Title="UMAP of filtered EB data colored by timepoints", title_fontSize=15.0
+                         precomputed=true, save_plot=true, path=figurespath * "/embryoidBodyData_umap_colBy_timepoints.svg", 
+                         colorlabel="Timepoint", legend_title="Time point", marker_size="10", 
+                         Title="", 
 );
 
 #---Create a UMAP plot of cells colored by cluster membership:
 create_colored_umap_plot(X_st, clusters_plot, plotseed; embedding=EB_umap_coords, 
-                         precomputed=true, save_plot=true, path=figurespath * "/embryoidBodyData_umap_colBy_leidenCluster.pdf", 
-                         colorlabel="Cluster", legend_title="Cluster", legend_symbolSize=150.0, marker_size="10", 
-                         Title="UMAP of filtered EB data colored by Leiden clustering (res 0.025)", title_fontSize=15.0,
+                         precomputed=true, save_plot=true, path=figurespath * "/embryoidBodyData_umap_colBy_leidenCluster.svg", 
+                         colorlabel="Cluster", legend_title="Cluster", marker_size="10", 
+                         Title="", 
                          scheme="dark2"
 );
 
 #---Create a UMAP plot of cells colored by the representation value of each timeBAE latent dimension:
-create_latent_umaps(X_st, plotseed, Z_perm, "timeBAE"; 
+create_latent_umaps(X_st, plotseed, Z_perm; 
                     figurespath=figurespath * "/timeBAE_(pcaUMAP)",
                     precomputed=true, embedding=EB_umap_coords, save_plot=true, 
-                    legend_title="Representation value", image_type=".pdf",  marker_size="10"
+                    legend_title="", image_type=".svg"
 );
 
 
 #---Creating Scatterplot showing top selected genes per latent dimension:
 for l in 1:zdim*length(L)
     pl = normalized_scatter_top_values(B_perm[:, l], DEGs; top_n=15, dim=l)
-    savefig(pl, figurespath * "scatterplot_genes_timeBAE_latdim$(l).pdf")
+    savefig(pl, figurespath * "scatterplot_genes_timeBAE_latdim$(l).svg")
 end
 
 
 #---Heatmap of absolute Pearson correlation coefficients between timeBAE latent dimensions:
-vegaheatmap(absCor_Z_perm; path=figurespath * "/abscor_latentrep_timeBAE.pdf", 
+vegaheatmap(absCor_Z_perm; path=figurespath * "/abscor_latentrep_timeBAE.svg", 
             ylabel="Latent dimensions", xlabel="Latent dimensions", legend_title="Correlation",
             scheme="reds", save_plot=true
 );
