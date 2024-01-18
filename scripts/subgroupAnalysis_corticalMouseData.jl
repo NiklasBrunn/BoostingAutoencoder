@@ -126,25 +126,25 @@ embedding_BAEUMAP = generate_umap(Z_BAE, plotseed);
 
 create_colored_umap_plot(st_dataMat, ones(size(st_dataMat, 1)), plotseed; embedding=embedding_BAEUMAP, 
                          precomputed=true, save_plot=true, path=figurespath * "/mousedata_(BAE)umap.svg", 
-                         colorlabel="Celltype", legend_title="Cell type", legend_symbolSize=150.0,
-                         Title="UMAP embedding of \n BAE latent representation", marker_size="60"
+                         colorlabel="Celltype", legend_title="", legend_symbolSize=0.0, legend_labelFontSize=0.0,
+                         Title="", marker_size="150", show_axis=false
 );
 create_colored_umap_plot(st_dataMat, ones(size(st_dataMat, 1)), plotseed; embedding=embedding_pcaUMAP, 
                          precomputed=true, save_plot=true, path=figurespath * "/mousedata_(PCA)umap.svg", 
-                         colorlabel="Celltype", legend_title="Cell type", legend_symbolSize=150.0,
-                         Title="UMAP embedding of \n first 50 principal components", marker_size="60"
+                         colorlabel="Celltype", legend_title="", legend_symbolSize=0.0, legend_labelFontSize=0.0,
+                         Title="", marker_size="150", show_axis=false
 );
 
 create_latent_umaps(st_dataMat, plotseed, Z_BAE; 
                     figurespath=figurespath * "/BAE_(BAEUMAP)",
                     precomputed=true, embedding=embedding_BAEUMAP, save_plot=true, 
-                    legend_title="", image_type=".svg", marker_size="150"
+                    legend_title="", image_type=".svg", marker_size="150", show_axis=false
 );
 
 
 #---Creating Scatterplots showing top selected genes per latent dimension:
 for l in 1:zdim
-    pl = normalized_scatter_top_values(B_BAE[:, l], genenames; top_n=15, dim=l)
+    pl = normalized_scatter_top_values(B_BAE[:, l], genenames; top_n=10, dim=l)
     savefig(pl, figurespath * "scatterplot_genes_BAE_latdim$(l).svg")
 end
 

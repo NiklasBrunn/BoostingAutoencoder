@@ -198,15 +198,15 @@ embedding_compL2Boost = generate_umap(Z_compL2Boost, plotseed);
 
 create_colored_umap_plot(st_dataMat, celltype, plotseed; embedding=embedding_BAEUMAP, 
                          precomputed=true, save_plot=true, path=figurespath * "/mousedata_(BAE)umap.svg", 
-                         colorlabel="Celltype", legend_title="Cell type"
+                         colorlabel="Celltype", legend_title="Cell type", show_axis=false
 );
 create_colored_umap_plot(st_dataMat, celltype, plotseed; embedding=embedding_compL2Boost, 
                          precomputed=true, save_plot=true, path=figurespath * "/mousedata_(compL2Boost)umap.svg", 
-                         colorlabel="Celltype", legend_title="Cell type"
+                         colorlabel="Celltype", legend_title="Cell type", show_axis=false
 );
 create_colored_umap_plot(st_dataMat, celltype, plotseed; embedding=embedding_pcaUMAP, 
                          precomputed=true, save_plot=true, path=figurespath * "/mousedata_(PCA)umap.svg", 
-                         colorlabel="Celltype", legend_title="Cell type"
+                         colorlabel="Celltype", legend_title="Cell type", show_axis=false
 );
 
 binary_obsvec = zeros(n);
@@ -215,41 +215,41 @@ binary_obsvec[test_inds].=1;
 create_colored_umap_plot(st_dataMat, binary_obsvec, plotseed; embedding=embedding_pcaUMAP, 
                          precomputed=true, save_plot=true, path=figurespath * "/mousedata_(PCA)umap_traintest.svg", 
                          colorlabel="Celltype", legend_title="Train/Test data",
-                         scheme="paired"
+                         scheme="paired", show_axis=false
 );
 create_colored_umap_plot(st_dataMat, binary_obsvec, plotseed; embedding=embedding_BAEUMAP, 
                          precomputed=true, save_plot=true, path=figurespath * "/mousedata_(BAE)umap_traintest.svg", 
                          colorlabel="Celltype", legend_title="Train/Test data",
-                         scheme="paired"
+                         scheme="paired", show_axis=false
 );
 
 
 create_latent_umaps(st_dataMat, plotseed, Z_BAE; 
                     figurespath=figurespath * "/BAE_(BAEUMAP)",
                     precomputed=true, embedding=embedding_BAEUMAP, save_plot=true,
-                    legend_title="", image_type=".svg"
+                    legend_title="", image_type=".svg", show_axis=false
 );
 create_latent_umaps(st_dataMat, plotseed, Z_BAE; 
                     figurespath=figurespath * "/BAE_(pcaUMAP)",
                     precomputed=true, embedding=embedding_pcaUMAP, save_plot=true, 
-                    legend_title="", image_type=".svg"
+                    legend_title="", image_type=".svg", show_axis=false
 );
 create_latent_umaps(st_dataMat, plotseed, Z_compL2Boost; 
                     figurespath=figurespath * "/compL2Boost_(compL2BoostUMAP)",
                     precomputed=true, embedding=embedding_compL2Boost, save_plot=true,
-                    legend_title="", image_type=".svg"
+                    legend_title="", image_type=".svg", show_axis=false
 );
 
 
 
 #---Creating Scatterplots showing top selected genes per latent dimension:
 for l in 1:zdim
-    pl = normalized_scatter_top_values(B_BAE[:, l], String.(genenames); top_n=15, dim=l)
+    pl = normalized_scatter_top_values(B_BAE[:, l], genenames; top_n=10, dim=l)
     savefig(pl, figurespath * "scatterplot_genes_BAE_latdim$(l).svg")
 end
 
 for l in 1:size(Y, 2)
-    pl = normalized_scatter_top_values(B_compL2Boost[:, l], String.(genenames); top_n=15, dim=l)
+    pl = normalized_scatter_top_values(B_compL2Boost[:, l], genenames; top_n=15, dim=l)
     savefig(pl, figurespath * "scatterplot_selGenes_compL2Boost_latdim$(l).svg")
 end
 
@@ -259,12 +259,12 @@ embedding_test_BAE = embedding_BAEUMAP[test_inds, :];
 Z_BAE_test = Z_BAE[test_inds, :];
 create_colored_umap_plot(st_dataMat, celltype_test, plotseed; embedding=embedding_test_BAE, precomputed=true, 
                          save_plot=true, path=figurespath * "/mousedata_BAEumap_test.svg", 
-                         colorlabel="Celltype", marker_size="40", legend_title="Cell type"
+                         colorlabel="Celltype", marker_size="40", legend_title="Cell type", show_axis=false
 );
 create_latent_umaps(st_dataMat, plotseed, Z_BAE_test; 
     figurespath=figurespath * "/test_BAE_(BAEUMAP)",
     precomputed=true, embedding=embedding_test_BAE, save_plot=true,
-    legend_title="Representation value", image_type=".svg"
+    legend_title="Representation value", image_type=".svg", show_axis=false
 );
 
 

@@ -168,15 +168,15 @@ end
 #---Create a UMAP plot of cells colored by measurement time points:
 create_colored_umap_plot(X_st, timepoints_plot, plotseed; embedding=EB_umap_coords, 
                          precomputed=true, save_plot=true, path=figurespath * "/embryoidBodyData_umap_colBy_timepoints.svg", 
-                         colorlabel="Timepoint", legend_title="Time point", marker_size="10", 
-                         Title="", 
+                         colorlabel="Timepoint", legend_title="", show_axis=false,
+                         Title="",  marker_size="20"
 );
 
 #---Create a UMAP plot of cells colored by cluster membership:
 create_colored_umap_plot(X_st, clusters_plot, plotseed; embedding=EB_umap_coords, 
                          precomputed=true, save_plot=true, path=figurespath * "/embryoidBodyData_umap_colBy_leidenCluster.svg", 
-                         colorlabel="Cluster", legend_title="Cluster", marker_size="10", 
-                         Title="", 
+                         colorlabel="Cluster", legend_title="", show_axis=false,
+                         Title="",  marker_size="20",
                          scheme="dark2"
 );
 
@@ -184,19 +184,19 @@ create_colored_umap_plot(X_st, clusters_plot, plotseed; embedding=EB_umap_coords
 create_latent_umaps(X_st, plotseed, Z_perm; 
                     figurespath=figurespath * "/timeBAE_(pcaUMAP)",
                     precomputed=true, embedding=EB_umap_coords, save_plot=true, 
-                    legend_title="", image_type=".svg"
+                    legend_title="", image_type=".svg", show_axis=false, marker_size="20"
 );
 
 
 #---Creating Scatterplot showing top selected genes per latent dimension:
 for l in 1:zdim*length(L)
-    pl = normalized_scatter_top_values(B_perm[:, l], DEGs; top_n=15, dim=l)
+    pl = normalized_scatter_top_values(B_perm[:, l], DEGs; top_n=10, dim=l)
     savefig(pl, figurespath * "scatterplot_genes_timeBAE_latdim$(l).svg")
 end
 
 
 #---Heatmap of absolute Pearson correlation coefficients between timeBAE latent dimensions:
 vegaheatmap(absCor_Z_perm; path=figurespath * "/abscor_latentrep_timeBAE.svg", 
-            ylabel="Latent dimensions", xlabel="Latent dimensions", legend_title="Correlation",
+            ylabel="Latent dimension", xlabel="Latent dimension", legend_title="Correlation",
             scheme="reds", save_plot=true
 );
