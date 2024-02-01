@@ -35,39 +35,20 @@ The `src` subfolder consists of Julia source code files for the BAE approach.
 
 All plots and data downloaded or generated while running the scripts are stored in the subfolder `figures` or `data`, respectively. 
 
-## Instructions for running code
-To run the Julia scripts, Julia (we used v1.6.7) has to be [downloaded](https://julialang.org/downloads/) and installed manually by the user. The required packages and their versions are specified in the `Project.toml` and `Manifest.toml` files in the main folder and automatically loaded/installed at the beginning of each script with the `Pkg.activate()` and `Pkg.instantiate()` commands. See [here](https://pkgdocs.julialang.org/v1.2/environments/) for more info on Julia environments. 
+## Installation
+To run the Julia scripts, [Julia](https://julialang.org/downloads/) (we used v1.6.7) has to be downloaded and installed manually by the user. The required packages and their versions are specified in the `Project.toml` and `Manifest.toml` files in the main folder and automatically loaded/installed at the beginning of each script with the `Pkg.activate()` and `Pkg.instantiate()` commands. See [here](https://pkgdocs.julialang.org/v1.2/environments/) for more info on Julia environments. 
 
-To run the Python scripts, we included details about a [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) environment in (`Environment.yml`) consisting of information about the Python version and used packages. A new conda environment can be created from this file. See [here](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment) for more details about managing and creating conda environments.
+To run the Python scripts, we included details about a [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) environment in (`Environment.yml`) consisting of information about the Python version and used packages. A new conda environment can be created from this file. See [here](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment) for more details about managing and creating conda environments. Follow these steps to set up your development environment:
 
-For running the BAE and timeBAE analysis on the simulated scRNA-seq data, you can directly run the files `main_sim3cellgroups3stagessScRNAseq.jl`, `main_sim10stagesScRNAseq.jl`, `modelcomparison_sim10stagesScRNAseq.jl`. For running the BAE analysis on the cortical mouse data from [Tasic et al.](https://www.nature.com/articles/nn.4216) first, run the script `get_corticalMouseData.jl` followed by `preprocess_corticalMouseData.py` for downloading and preprocessing the data. Subsequently, analysis can be performed by running the scripts `main_corticalMouseData.jl` and `subgroupAnalysis_corticalMouseData.jl`. For running the timeBAE analysis on the embryoid body data from [Moon et al.](https://www.nature.com/articles/s41587-019-0336-3) first run the preprocessing scripts `get_and_preprocess_embryoidBodyData.py` and `cluster_and_filter_embryoidBodyData.py` followed by `main_embryoidBodyData.jl` for generating the results.
+1. **Create the Conda Environment**
 
-### Prerequisites
-
-- [Anaconda](https://www.anaconda.com/products/individual) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) installed on your system.
-
-### Installation
-
-Follow these steps to set up your development environment:
-
-1. **Clone the Repository**
+    Navigate to the directory containing the `Environment.yml` file and create the Conda environment:
 
     ```bash
-    git clone [repository-url]
-    cd [repository-name]
+    conda env create -f Environment.yml
     ```
 
-    Replace `[repository-url]` and `[repository-name]` with the URL and name of your GitHub repository.
-
-2. **Create the Conda Environment**
-
-    Navigate to the directory containing the `environment.yaml` file and create the Conda environment:
-
-    ```bash
-    conda env create -f environment.yaml
-    ```
-
-3. **Activate the Conda Environment**
+2. **Activate the Conda Environment**
 
     Once the environment is created, activate it:
 
@@ -75,26 +56,8 @@ Follow these steps to set up your development environment:
     conda activate [env-name]
     ```
 
-    Replace `[env-name]` with the name of your Conda environment, as specified in the `environment.yaml` file.
+    Replace `[env-name]` with the name of the Conda environment, as specified in the `Environment.yml` file (in this case it is named `BAE`).
 
-4. **Run the Application**
 
-    With the environment activated, you can now run your application:
-
-    ```bash
-    python [your-script].py
-    ```
-
-    Replace `[your-script].py` with the name of your main Python script.
-
-5. **Deactivate the Environment (Optional)**
-
-    When you are done, you can deactivate the environment:
-
-    ```bash
-    conda deactivate
-    ```
-
-## Usage
-
-Add additional notes about how to use the project.
+## Instructions for running code
+For running the BAE and timeBAE analysis on the simulated scRNA-seq data, you can directly run the files `main_sim3cellgroups3stagessScRNAseq.jl`, `main_sim10stagesScRNAseq.jl`, `modelcomparison_sim10stagesScRNAseq.jl`. For running the BAE analysis on the cortical mouse data from [Tasic et al.](https://www.nature.com/articles/nn.4216) first, run the script `get_corticalMouseData.jl` followed by `preprocess_corticalMouseData.py` for downloading and preprocessing the data. Subsequently, analysis can be performed by running the scripts `main_corticalMouseData.jl` and `subgroupAnalysis_corticalMouseData.jl`. For running the timeBAE analysis on the embryoid body data from [Moon et al.](https://www.nature.com/articles/s41587-019-0336-3) first run the preprocessing scripts `get_and_preprocess_embryoidBodyData.py` and `cluster_and_filter_embryoidBodyData.py` followed by `main_embryoidBodyData.jl` for generating the results.
