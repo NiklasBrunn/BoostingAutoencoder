@@ -40,23 +40,24 @@ To run the Julia scripts, [Julia](https://julialang.org/downloads/) (we used v1.
 
 To run the Python scripts, we included details about a [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) environment in (`Environment.yml`) consisting of information about the Python version and used packages. A new conda environment can be created from this file. See [here](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment) for more details about managing and creating conda environments. Follow these steps to set up your development environment:
 
-1. **Create the Conda Environment**
+1. **Navigate to the project directory**
 
-    Navigate to the directory containing the `Environment.yml` file and create the Conda environment:
+    Navigate to the directory where the cloned GitHub repository is located:
+
+    ```bash
+    conda env create -f Environment.yml
+    ```
+2. **Create the conda environment**
+
+    Create a new conda environment that is named as specified in the `Environment.yml` file (in this case it is named `BAE`):
 
     ```bash
     conda env create -f Environment.yml
     ```
 
-2. **Activate the Conda Environment**
+3. **Use the BAE conda environment for running python code**
 
-    Once the environment is created, activate it:
-
-    ```bash
-    conda activate [env-name]
-    ```
-
-    Replace `[env-name]` with the name of the Conda environment, as specified in the `Environment.yml` file (in this case it is named `BAE`).
+    Once the environment is created, select it as the kernal for running the python code in the repository.
 
 
 ## Instructions for running code
