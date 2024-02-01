@@ -83,7 +83,7 @@ All plots and data downloaded or generated while running the scripts are stored 
       Once the environment is created, select it as the kernel for running the python code in the repository.
 
 
-## Instructions for running code
+## Instructions for running scripts
 1. **Simulated scRNA-seq data**
    For running the BAE and timeBAE analysis on the simulated scRNA-seq data, you can directly run the files `main_sim10stagesScRNAseq.jl`, `modelcomparison_sim10stagesScRNAseq.jl`, `main_sim3cellgroups3stagessScRNAseq.jl`.
 
