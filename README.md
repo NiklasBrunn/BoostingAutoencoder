@@ -65,14 +65,14 @@ All plots and data downloaded or generated while running the scripts are stored 
 
   2.1. **Navigate to the project directory**
   
-      Navigate to the directory of the cloned GitHub repository:
+      - Navigate to the directory of the cloned GitHub repository:
   
       ```bash
       cd ~/Desktop/MyProjects/BoostingAutoencoder
       ```
   2.2. **Create the conda environment**
   
-      Create a new conda environment that is named as specified in the `Environment.yml` file (in this case it is named `BAE`):
+      - Create a new conda environment that is named as specified in the `Environment.yml` file (in this case it is named `BAE-env`):
   
       ```bash
       conda env create -f Environment.yml
@@ -80,7 +80,7 @@ All plots and data downloaded or generated while running the scripts are stored 
 
   2.3. **Use the BAE conda environment for running python code**
   
-      Once the environment is created, select it as the kernel for running the python code in the repository.
+      - Once the environment is created, select it as the kernel for running the python code in the repository.
 
 
 ## Instructions for running scripts
