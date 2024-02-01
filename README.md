@@ -64,19 +64,15 @@ All plots and data downloaded or generated while running the scripts are stored 
    - To run the Python scripts, we included details about a [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) environment in (`Environment.yml`) consisting of information about the Python version and used packages. A new conda environment can be created from this file. See [here](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment) for more details about managing and creating conda environments. Follow these steps to set up your development environment:
 
   2.1. **Navigate to the project directory**
-  
-      - Navigate to the directory of the cloned GitHub repository:
-  
-      ```bash
-      cd ~/Desktop/MyProjects/BoostingAutoencoder
-      ```
+     - Navigate to the directory of the cloned GitHub repository:
+       ```bash
+       cd ~/Desktop/MyProjects/BoostingAutoencoder
+       ```
   2.2. **Create the conda environment**
-  
-      - Create a new conda environment that is named as specified in the `Environment.yml` file (in this case it is named `BAE-env`):
-  
-      ```bash
-      conda env create -f Environment.yml
-      ```
+     - Create a new conda environment that is named as specified in the `Environment.yml` file (in this case it is named `BAE-env`):
+       ```bash
+       conda env create -f Environment.yml
+       ```
 
   2.3. **Use the BAE conda environment for running python code**
   
