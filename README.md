@@ -10,8 +10,8 @@ This GitHub repository contains all the code and scripts to define and train a b
 >
 > <sup>1</sup> Institute of Medical Biometry and Statistics, Faculty of Medicine and Medical Center, University of Freiburg, Germany<br>
 > <sup>2</sup> Freiburg Center for Data Analysis and Modeling, University of Freiburg, Germany<br>
-> <sup>3</sup> Institute of Anatomy and Cell Biology, Department of Molecular Embryology, Faculty of Biology, University of Freiburg, Germany
-> <sup>4</sup> Centre for Integrative Biological Signaling Studies (CIBSS), University of Freiburg, Germany
+> <sup>3</sup> Institute of Anatomy and Cell Biology, Department of Molecular Embryology, Faculty of Biology, University of Freiburg, Germany<br>
+> <sup>4</sup> Centre for Integrative Biological Signaling Studies (CIBSS), University of Freiburg, Germany<br>
 > <sup>*</sup> Corresponding author
 > <sup>+</sup> Repository owner
 
