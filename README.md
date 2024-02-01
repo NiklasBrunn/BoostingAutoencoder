@@ -76,7 +76,6 @@ All plots and data downloaded or generated while running the scripts are stored 
        ```
 
   2.3. **Use the BAE conda environment for running python code**
-  
       - Once the environment is created, select it as the kernel for running the python code in the repository.
 
 
