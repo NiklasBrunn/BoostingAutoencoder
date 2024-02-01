@@ -60,4 +60,9 @@ To run the Python scripts, we included details about a [conda](https://conda.io/
 
 
 ## Instructions for running code
-For running the BAE and timeBAE analysis on the simulated scRNA-seq data, you can directly run the files `main_sim3cellgroups3stagessScRNAseq.jl`, `main_sim10stagesScRNAseq.jl`, `modelcomparison_sim10stagesScRNAseq.jl`. For running the BAE analysis on the cortical mouse data from [Tasic et al.](https://www.nature.com/articles/nn.4216) first, run the script `get_corticalMouseData.jl` followed by `preprocess_corticalMouseData.py` for downloading and preprocessing the data. Subsequently, analysis can be performed by running the scripts `main_corticalMouseData.jl` and `subgroupAnalysis_corticalMouseData.jl`. For running the timeBAE analysis on the embryoid body data from [Moon et al.](https://www.nature.com/articles/s41587-019-0336-3) first run the preprocessing scripts `get_and_preprocess_embryoidBodyData.py` and `cluster_and_filter_embryoidBodyData.py` followed by `main_embryoidBodyData.jl` for generating the results.
+1. **Simulated scRNA-seq data**
+   For running the BAE and timeBAE analysis on the simulated scRNA-seq data, you can directly run the files `main_sim10stagesScRNAseq.jl`, `modelcomparison_sim10stagesScRNAseq.jl`, `main_sim3cellgroups3stagessScRNAseq.jl`.
+
+2. **Cortical mouse scRNA-seq data**
+      For running the BAE analysis on the cortical mouse data from [Tasic et al.](https://www.nature.com/articles/nn.4216) first, run the script `get_corticalMouseData.jl` followed by `preprocess_corticalMouseData.py` for downloading and preprocessing the data. Subsequently, analysis can be performed by running the scripts `main_corticalMouseData.jl` and `subgroupAnalysis_corticalMouseData.jl`.
+3. **Embryoid body scRNA-seq data**   For running the timeBAE analysis on the embryoid body data from [Moon et al.](https://www.nature.com/articles/s41587-019-0336-3) first run the preprocessing scripts `get_and_preprocess_embryoidBodyData.py` and `cluster_and_filter_embryoidBodyData.py` followed by `main_embryoidBodyData.jl` for generating the results.
