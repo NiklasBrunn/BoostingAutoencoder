@@ -36,28 +36,51 @@ The `src` subfolder consists of Julia source code files for the BAE approach.
 All plots and data downloaded or generated while running the scripts are stored in the subfolder `figures` or `data`, respectively. 
 
 ## Installation
-To run the Julia scripts, [Julia](https://julialang.org/downloads/) (we used v1.6.7) has to be downloaded and installed manually by the user. The required packages and their versions are specified in the `Project.toml` and `Manifest.toml` files in the main folder and automatically loaded/installed at the beginning of each script with the `Pkg.activate()` and `Pkg.instantiate()` commands. See [here](https://pkgdocs.julialang.org/v1.2/environments/) for more info on Julia environments. 
+- Git should be installed on your computer. You can download and install it from [Git's official website](https://git-scm.com/downloads).
 
-To run the Python scripts, we included details about a [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) environment in (`Environment.yml`) consisting of information about the Python version and used packages. A new conda environment can be created from this file. See [here](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment) for more details about managing and creating conda environments. Follow these steps to set up your development environment:
+0.1. **Open Your Terminal**
+   - On macOS or Linux, open the Terminal application.
+   - On Windows, you can use Command Prompt, PowerShell, or Git Bash.
 
-1. **Navigate to the project directory**
+0.2. **Navigate to Your Desired Directory**
+   - Use the `cd` command to change to the directory where you want to clone the repository.
+   - Example: To change to a directory named `MyProjects` on your desktop, you would use:
+     ```bash
+     cd ~/Desktop/MyProjects
+     ```
+     
+0.3. **Clone the Repository**
+   - Use the `git clone` command followed by the URL of the repository.
+   - You can find the URL on the repository's GitHub page.
+   - Example:
+     ```bash
+     git clone [https://github.com/username/repository.git](https://github.com/NiklasBrunn/BoostingAutoencoder/tree/main)
+     ```
 
-    Navigate to the directory where the cloned GitHub repository is located:
+1. **Install Julia**
+   - To run the Julia scripts, [Julia](https://julialang.org/downloads/) (we used v1.6.7) has to be downloaded and installed manually by the user. The required packages and their versions are specified in the `Project.toml` and `Manifest.toml` files in the main folder and automatically loaded/installed at the beginning of each script with the `Pkg.activate()` and `Pkg.instantiate()` commands. See [here](https://pkgdocs.julialang.org/v1.2/environments/) for more info on Julia environments. 
 
-    ```bash
-    conda env create -f Environment.yml
-    ```
-2. **Create the conda environment**
+2. **Install Python**
+   - To run the Python scripts, we included details about a [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) environment in (`Environment.yml`) consisting of information about the Python version and used packages. A new conda environment can be created from this file. See [here](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment) for more details about managing and creating conda environments. Follow these steps to set up your development environment:
 
-    Create a new conda environment that is named as specified in the `Environment.yml` file (in this case it is named `BAE`):
+  2.1. **Navigate to the project directory**
+  
+      Navigate to the directory where the cloned GitHub repository is located:
+  
+      ```bash
+      cd
+      ```
+  2.2. **Create the conda environment**
+  
+      Create a new conda environment that is named as specified in the `Environment.yml` file (in this case it is named `BAE`):
+  
+      ```bash
+      conda env create -f Environment.yml
+      ```
 
-    ```bash
-    conda env create -f Environment.yml
-    ```
-
-3. **Use the BAE conda environment for running python code**
-
-    Once the environment is created, select it as the kernal for running the python code in the repository.
+  2.3. **Use the BAE conda environment for running python code**
+  
+      Once the environment is created, select it as the kernal for running the python code in the repository.
 
 
 ## Instructions for running code
