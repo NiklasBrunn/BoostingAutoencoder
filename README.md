@@ -68,6 +68,7 @@ All plots and data downloaded or generated while running the scripts are stored 
        ```bash
        cd ~/Desktop/MyProjects/BoostingAutoencoder
        ```
+       
   2.2. **Create the conda environment**
      - Create a new conda environment that is named as specified in the `Environment.yml` file (in this case it is named `BAE-env`):
        ```bash
