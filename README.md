@@ -5,7 +5,7 @@ This GitHub repository contains all the code and scripts to define and train a b
 
 ## Author information for the manuscript
 > First/corresponding authors: Niklas Brunn<sup>12*+</sup>, Maren Hackenberg<sup>12*</sup><br>
-> Co-author: Tanja Vogel <sup>3</sup>
+> Co-author: Tanja Vogel <sup>3</sup><br>
 > Senior author: Harald Binder<sup>124</sup>
 >
 > <sup>1</sup> Institute of Medical Biometry and Statistics, Faculty of Medicine and Medical Center, University of Freiburg, Germany<br>
