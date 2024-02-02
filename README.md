@@ -72,7 +72,7 @@ All plots and data downloaded or generated while running the scripts are stored 
      ```bash
      cd ~/BoostingAutoencoder
      ```
-   - (Windows)
+   - (Windows):
      ```bash
      cd /BoostingAutoencoder
      ```
