@@ -38,18 +38,18 @@ All plots and data downloaded or generated while running the scripts are stored 
 ## Installation
 - Git should be installed on your computer. You can download and install it from [Git's official website](https://git-scm.com/downloads).
 
-0.1. **Open Your Terminal**
+0.1. **Open your terminal**
    - On macOS or Linux, open the Terminal application.
    - On Windows, you can use Command Prompt, PowerShell, or Git Bash.
 
-0.2. **Navigate to Your Desired Directory**
+0.2. **Navigate to your desired directory**
    - Use the `cd` command to change to the directory where you want to clone the repository.
    - Example: To change to a directory named `MyProjects` on your desktop, you would use:
      ```bash
      cd ~/Desktop/MyProjects
      ```
      
-0.3. **Clone the Repository**
+0.3. **Clone the repository**
    - Use the `git clone` command followed by the URL of the repository.
    - You can find the URL on the repository's GitHub page.
    - Example:
