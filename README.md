@@ -44,9 +44,13 @@ All plots and data downloaded or generated while running the scripts are stored 
 
 0.2. **Navigate to your desired directory**
    - Use the `cd` command to change to the directory where you want to clone the repository.
-   - Example: To change to a directory named `MyProjects` on your desktop, you would use:
+   - Example (macOS): To change to a directory named `MyProjects` on your desktop, you would use:
      ```bash
      cd ~/Desktop/MyProjects
+     ```
+   - Example (Windows): To change to a directory named `MyProjects` on your desktop, you would use:
+     ```bash
+     cd C:\Users\[YourUsername]\Desktop\MyProjects
      ```
      
 0.3. **Clone the repository**
@@ -54,7 +58,7 @@ All plots and data downloaded or generated while running the scripts are stored 
    - You can find the URL on the repository's GitHub page.
    - Example:
      ```bash
-     git clone https://github.com/username/repository.git
+     git clone https://github.com/NiklasBrunn/BoostingAutoencoder/tree/main
      ```
 
 1. **Install Julia**
