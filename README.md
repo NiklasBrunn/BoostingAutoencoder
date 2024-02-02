@@ -74,7 +74,7 @@ All plots and data downloaded or generated while running the scripts are stored 
      ```
    - (Windows):
      ```bash
-     cd /BoostingAutoencoder
+     cd \BoostingAutoencoder
      ```
        
 2.2. **Create the conda environment**
