@@ -54,7 +54,7 @@ All plots and data downloaded or generated while running the scripts are stored 
    - You can find the URL on the repository's GitHub page.
    - Example:
      ```bash
-     git clone https://github.com/username/repository.git(https://github.com/NiklasBrunn/BoostingAutoencoder/tree/main)
+     git clone https://github.com/username/repository.git
      ```
 
 1. **Install Julia**
