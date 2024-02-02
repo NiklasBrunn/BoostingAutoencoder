@@ -22,31 +22,20 @@
 #---Activate the enviroment:
 using Pkg;
 
-# All paths are relative to the repository main folder
-
 Pkg.activate(".");
 Pkg.instantiate();
 Pkg.status() 
 
-#---Load packages:
-using GZip;
-using DelimitedFiles;
-using XLSX;
-using DataFrames;
-using Statistics;
-
-
-
-#------------------------------
-# Define paths and include functions:
-#------------------------------
+# All paths are relative to the repository main folder
 #---Set paths:
 projectpath = joinpath(@__DIR__, "../"); 
 srcpath = projectpath * "src/";
 datapath = projectpath * "data/corticalMouseData/";
 
 #---Include functions:
-include(srcpath * "/preprocessing.jl");
+include(projectpath * "/src/BAE.jl");
+using .BoostingAutoEncoder;
+using DelimitedFiles;
 
 
 

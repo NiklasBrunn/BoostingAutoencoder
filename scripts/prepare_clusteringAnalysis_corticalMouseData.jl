@@ -9,42 +9,22 @@
 #---Activate the enviroment:
 using Pkg;
 
-# All paths are relative to the repository main folder
-
 Pkg.activate(".");
 Pkg.instantiate();
 Pkg.status()
 
-#---Load packages:
-using Flux;
-using Random; 
-using Statistics;
-using DelimitedFiles;
-using LinearAlgebra;
-using DataFrames;
-using UMAP;
-using StatsBase;
-using Distributions;
-using CSV;
-using ProgressMeter;
-
-
-
-#------------------------------
-# Define paths and include functions:
-#------------------------------
 #---Set paths:
+# All paths are relative to the repository main folder
 projectpath = joinpath(@__DIR__, "../"); 
 srcpath = projectpath * "src/";
 datapath = projectpath * "data/corticalMouseData/";
 
 #---Include functions:
-include(srcpath * "utils.jl");
-include(srcpath * "model.jl");
-include(srcpath * "losses.jl");
-include(srcpath * "training.jl");
-include(srcpath * "boosting.jl");
-include(srcpath * "preprocessing.jl");
+include(projectpath * "/src/BAE.jl");
+using .BoostingAutoEncoder;
+using DelimitedFiles;
+using Random;
+using Flux;
 
 
 
@@ -69,7 +49,7 @@ k = Int(round((1325)));
 
 (X_train_st, X_test_st, X_train_log1, X_test_log1, 
 Y_train, Y_test, train_inds, test_inds) = split_traintestdata(log1_dataMat, Y; 
-                                                                  dataseed=dataseed, k=k
+                                                              dataseed=dataseed, k=k
 );
 
 n, p = Int32.(size(st_dataMat));

@@ -9,30 +9,12 @@
 #---Activate the enviroment:
 using Pkg;
 
-# All paths are relative to the repository main folder
-
 Pkg.activate(".");
 Pkg.instantiate();
 Pkg.status()
 
-#---Load packages:
-using Flux;
-using Random; 
-using Statistics;
-using DelimitedFiles;
-using Plots;
-using LinearAlgebra;
-using DataFrames;
-using VegaLite;
-using UMAP;
-using ProgressMeter;
-
-
-
-#------------------------------
-# Define paths and include functions:
-#------------------------------
 #---Set paths:
+# All paths are relative to the repository main folder
 projectpath = joinpath(@__DIR__, "../"); 
 srcpath = projectpath * "src/";
 figurespath = projectpath * "figures/sim10stagesScRNAseq_modelcomparison/";
@@ -42,14 +24,11 @@ if !isdir(figurespath)
 end
 
 #---Include functions:
-include(srcpath * "utils.jl");
-include(srcpath * "model.jl");
-include(srcpath * "losses.jl");
-include(srcpath * "training.jl");
-include(srcpath * "boosting.jl");
-include(srcpath * "preprocessing.jl");
-include(srcpath * "simulations.jl");
-include(srcpath * "plotting.jl");
+include(projectpath * "/src/BAE.jl");
+using .BoostingAutoEncoder;
+using Random;
+using Flux;
+using Statistics;
 
 
 

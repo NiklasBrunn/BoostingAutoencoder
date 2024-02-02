@@ -51,6 +51,8 @@ function trainBAE(X::AbstractArray, BAE::Autoencoder; mode::String="alternating"
     
         end
     else
+
+        p = size(X[1], 2)
         
         #---timeBAE:
         opt = ADAM(ν)
@@ -59,7 +61,7 @@ function trainBAE(X::AbstractArray, BAE::Autoencoder; mode::String="alternating"
             @info "Training timeBAE in alternating mode for $(epochs) epochs per time point ..."
 
             timepoints = length(X)
-            B = zeros(size(X[1], 2), zdim * (timepoints+1))
+            B = zeros(p, zdim * (timepoints+1))
 
             for t in 1: timepoints
                 @info "Training at timepoint $(t) ..."
@@ -92,7 +94,7 @@ function trainBAE(X::AbstractArray, BAE::Autoencoder; mode::String="alternating"
             @info "Training timeBAE in jointLoss mode for $(epochs) epochs per time point ..."
 
             timepoints = length(X)
-            B = zeros(size(X[1], 2), zdim * (timepoints+1))
+            B = zeros(p, zdim * (timepoints+1))
         
             for t in 1: timepoints
                 @info "Training at timepoint $(t) ..."

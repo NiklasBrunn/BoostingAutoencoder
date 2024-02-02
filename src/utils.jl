@@ -1,6 +1,27 @@
 #------------------------------
 # This file contains utility functions:
 #------------------------------
+"""
+    get_latdim_grads(Xt::AbstractMatrix{<:AbstractFloat}, BAE::Autoencoder)
+
+Compute the negative gradients of the reconstruction loss with respect to the current latent representation.
+
+# Arguments
+- `Xt::AbstractMatrix{<:AbstractFloat}`: The input data matrix.
+- `BAE::Autoencoder`: The autoencoder model.
+
+# Returns
+- `gs::Matrix`: The negative gradients of the reconstruction loss with respect to the current latent representation.
+"""
+function get_latdim_grads(Xt::AbstractMatrix{<:AbstractFloat}, BAE::Autoencoder) 
+    #compute the current latent representation:
+    Z = BAE.encoder(Xt) 
+
+    #compute the gradients of the reconstruction loss w.r.t. the current latent representation (matrix form)
+    gs = -transpose(gradient(arg -> loss_z(arg, Xt, BAE.decoder), Z)[1]) 
+    return gs 
+end
+
 
 """
     find_zero_columns(X::AbstractMatrix{<:Number})

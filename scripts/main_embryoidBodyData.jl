@@ -9,33 +9,12 @@
 #---Activate the enviroment:
 using Pkg;
 
-# all paths are relative to the repository main folder
-
 Pkg.activate(".");
 Pkg.instantiate();
 Pkg.status()
 
-#---Load packages:
-using Flux;
-using Random; 
-using Statistics;
-using DelimitedFiles;
-using Plots;
-using LinearAlgebra;
-using DataFrames;
-using VegaLite;
-using UMAP;
-using StatsBase;
-using CSV;
-using ColorSchemes;
-using ProgressMeter;
-
-
-
-#------------------------------
-# Define paths and include functions:
-#------------------------------
 #---Set paths:
+# all paths are relative to the repository main folder
 projectpath = joinpath(@__DIR__, "../"); 
 srcpath = projectpath * "src/";
 datapath = projectpath * "data/embryoidBodyData/";
@@ -46,13 +25,15 @@ if !isdir(figurespath)
 end
 
 #---Include functions:
-include(srcpath * "utils.jl");
-include(srcpath * "model.jl");
-include(srcpath * "losses.jl");
-include(srcpath * "training.jl");
-include(srcpath * "boosting.jl");
-include(srcpath * "preprocessing.jl");
-include(srcpath * "plotting.jl");
+include(projectpath * "/src/BAE.jl");
+using .BoostingAutoEncoder;
+using DelimitedFiles;
+using CSV;
+using Random;
+using Flux;
+using Statistics;
+using DataFrames;
+using Plots;
 
 
 
@@ -167,14 +148,14 @@ end
 
 #---Create a UMAP plot of cells colored by measurement time points:
 create_colored_umap_plot(X_st, timepoints_plot, plotseed; embedding=EB_umap_coords, 
-                         precomputed=true, save_plot=true, path=figurespath * "/embryoidBodyData_umap_colBy_timepoints.svg", 
+                         precomputed=true, save_plot=true, path=figurespath * "/embryoidBodyData_umap_colBy_timepoints.pdf", 
                          colorlabel="Timepoint", legend_title="", show_axis=false,
                          Title="",  marker_size="20"
 );
 
 #---Create a UMAP plot of cells colored by cluster membership:
 create_colored_umap_plot(X_st, clusters_plot, plotseed; embedding=EB_umap_coords, 
-                         precomputed=true, save_plot=true, path=figurespath * "/embryoidBodyData_umap_colBy_leidenCluster.svg", 
+                         precomputed=true, save_plot=true, path=figurespath * "/embryoidBodyData_umap_colBy_leidenCluster.pdf", 
                          colorlabel="Cluster", legend_title="", show_axis=false,
                          Title="",  marker_size="20",
                          scheme="dark2"
@@ -184,19 +165,19 @@ create_colored_umap_plot(X_st, clusters_plot, plotseed; embedding=EB_umap_coords
 create_latent_umaps(X_st, plotseed, Z_perm; 
                     figurespath=figurespath * "/timeBAE_(pcaUMAP)",
                     precomputed=true, embedding=EB_umap_coords, save_plot=true, 
-                    legend_title="", image_type=".svg", show_axis=false, marker_size="20"
+                    legend_title="", image_type=".pdf", show_axis=false, marker_size="20"
 );
 
 
 #---Creating Scatterplot showing top selected genes per latent dimension:
 for l in 1:zdim*length(L)
     pl = normalized_scatter_top_values(B_perm[:, l], DEGs; top_n=10, dim=l)
-    savefig(pl, figurespath * "scatterplot_genes_timeBAE_latdim$(l).svg")
+    savefig(pl, figurespath * "scatterplot_genes_timeBAE_latdim$(l).pdf")
 end
 
 
 #---Heatmap of absolute Pearson correlation coefficients between timeBAE latent dimensions:
-vegaheatmap(absCor_Z_perm; path=figurespath * "/abscor_latentrep_timeBAE.svg", 
+vegaheatmap(absCor_Z_perm; path=figurespath * "/abscor_latentrep_timeBAE.pdf", 
             ylabel="Latent dimension", xlabel="Latent dimension", legend_title="Correlation",
             scheme="reds", save_plot=true
 );

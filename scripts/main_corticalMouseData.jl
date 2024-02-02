@@ -9,32 +9,12 @@
 #---Activate the enviroment:
 using Pkg;
 
-# All paths are relative to the repository main folder
-
 Pkg.activate(".");
 Pkg.instantiate();
 Pkg.status()
 
-#---Load packages:
-using Flux;
-using Random; 
-using Statistics;
-using DelimitedFiles;
-using Plots;
-using LinearAlgebra;
-using DataFrames;
-using VegaLite;
-using UMAP;
-using StatsBase;
-using ColorSchemes; 
-using ProgressMeter;
-
-
-
-#------------------------------
-# Define paths and include functions:
-#------------------------------
 #---Set paths:
+# All paths are relative to the repository main folder
 projectpath = joinpath(@__DIR__, "../"); 
 srcpath = projectpath * "src/";
 datapath = projectpath * "data/corticalMouseData/";
@@ -45,13 +25,14 @@ if !isdir(figurespath)
 end
 
 #---Include functions:
-include(srcpath * "utils.jl");
-include(srcpath * "model.jl");
-include(srcpath * "losses.jl");
-include(srcpath * "training.jl");
-include(srcpath * "boosting.jl");
-include(srcpath * "preprocessing.jl");
-include(srcpath * "plotting.jl");
+include(projectpath * "/src/BAE.jl");
+using .BoostingAutoEncoder;
+using DelimitedFiles;
+using Random;
+using Flux;
+using Statistics;
+using DataFrames;
+using Plots;
 
 
 
@@ -78,7 +59,7 @@ k = Int(round((1325)));
 
 (X_train_st, X_test_st, X_train_log1, X_test_log1, 
 Y_train, Y_test, train_inds, test_inds) = split_traintestdata(log1_dataMat, Y; 
-                                                                  dataseed=dataseed, k=k
+                                                              dataseed=dataseed, k=k
 );
 
 n, p = Int32.(size(st_dataMat));
@@ -174,15 +155,15 @@ sort_Y = hcat([sort_Y[:, l].*l for l in 1:size(sort_Y, 2)]...);
 sort_Y[findall(x->x==0, sort_Y)] = sort_Y[findall(x->x==0, sort_Y)] .+ 20;
 
 #---Sorted by cell type latent representation heatmaps:
-vegaheatmap(sort_Y; path=figurespath * "sort_onehot_celltype_category20.svg", 
+vegaheatmap(sort_Y; path=figurespath * "sort_onehot_celltype_category20.pdf", 
             ylabel="Cell", xlabel="Cell type", legend_title="Cell type",
             color_field="value:o", scheme="category20", save_plot=true
 );
-vegaheatmap(sort_Z_compL2Boost; path=figurespath * "/sort_latentRep_compL2Boost.svg", 
+vegaheatmap(sort_Z_compL2Boost; path=figurespath * "/sort_latentRep_compL2Boost.pdf", 
             legend_title="Representation value",
             scheme="blueorange", set_domain_mid=true, save_plot=true
 );
-vegaheatmap(sort_Z_BAE; path=figurespath * "sort_latentRep_BAE.svg", 
+vegaheatmap(sort_Z_BAE; path=figurespath * "sort_latentRep_BAE.pdf", 
             legend_title="Representation value",
             scheme="blueorange", set_domain_mid=true, save_plot=true
 );
@@ -197,15 +178,15 @@ embedding_compL2Boost = generate_umap(Z_compL2Boost, plotseed);
 
 
 create_colored_umap_plot(st_dataMat, celltype, plotseed; embedding=embedding_BAEUMAP, 
-                         precomputed=true, save_plot=true, path=figurespath * "/mousedata_(BAE)umap.svg", 
+                         precomputed=true, save_plot=true, path=figurespath * "/mousedata_(BAE)umap.pdf", 
                          colorlabel="Celltype", legend_title="Cell type", show_axis=false
 );
 create_colored_umap_plot(st_dataMat, celltype, plotseed; embedding=embedding_compL2Boost, 
-                         precomputed=true, save_plot=true, path=figurespath * "/mousedata_(compL2Boost)umap.svg", 
+                         precomputed=true, save_plot=true, path=figurespath * "/mousedata_(compL2Boost)umap.pdf", 
                          colorlabel="Celltype", legend_title="Cell type", show_axis=false
 );
 create_colored_umap_plot(st_dataMat, celltype, plotseed; embedding=embedding_pcaUMAP, 
-                         precomputed=true, save_plot=true, path=figurespath * "/mousedata_(PCA)umap.svg", 
+                         precomputed=true, save_plot=true, path=figurespath * "/mousedata_(PCA)umap.pdf", 
                          colorlabel="Celltype", legend_title="Cell type", show_axis=false
 );
 
@@ -213,12 +194,12 @@ binary_obsvec = zeros(n);
 binary_obsvec[test_inds].=1;
 
 create_colored_umap_plot(st_dataMat, binary_obsvec, plotseed; embedding=embedding_pcaUMAP, 
-                         precomputed=true, save_plot=true, path=figurespath * "/mousedata_(PCA)umap_traintest.svg", 
+                         precomputed=true, save_plot=true, path=figurespath * "/mousedata_(PCA)umap_traintest.pdf", 
                          colorlabel="Celltype", legend_title="Train/Test data",
                          scheme="paired", show_axis=false
 );
 create_colored_umap_plot(st_dataMat, binary_obsvec, plotseed; embedding=embedding_BAEUMAP, 
-                         precomputed=true, save_plot=true, path=figurespath * "/mousedata_(BAE)umap_traintest.svg", 
+                         precomputed=true, save_plot=true, path=figurespath * "/mousedata_(BAE)umap_traintest.pdf", 
                          colorlabel="Celltype", legend_title="Train/Test data",
                          scheme="paired", show_axis=false
 );
@@ -227,17 +208,17 @@ create_colored_umap_plot(st_dataMat, binary_obsvec, plotseed; embedding=embeddin
 create_latent_umaps(st_dataMat, plotseed, Z_BAE; 
                     figurespath=figurespath * "/BAE_(BAEUMAP)",
                     precomputed=true, embedding=embedding_BAEUMAP, save_plot=true,
-                    legend_title="", image_type=".svg", show_axis=false
+                    legend_title="", image_type=".pdf", show_axis=false
 );
 create_latent_umaps(st_dataMat, plotseed, Z_BAE; 
                     figurespath=figurespath * "/BAE_(pcaUMAP)",
                     precomputed=true, embedding=embedding_pcaUMAP, save_plot=true, 
-                    legend_title="", image_type=".svg", show_axis=false
+                    legend_title="", image_type=".pdf", show_axis=false
 );
 create_latent_umaps(st_dataMat, plotseed, Z_compL2Boost; 
                     figurespath=figurespath * "/compL2Boost_(compL2BoostUMAP)",
                     precomputed=true, embedding=embedding_compL2Boost, save_plot=true,
-                    legend_title="", image_type=".svg", show_axis=false
+                    legend_title="", image_type=".pdf", show_axis=false
 );
 
 
@@ -245,12 +226,12 @@ create_latent_umaps(st_dataMat, plotseed, Z_compL2Boost;
 #---Creating Scatterplots showing top selected genes per latent dimension:
 for l in 1:zdim
     pl = normalized_scatter_top_values(B_BAE[:, l], genenames; top_n=10, dim=l)
-    savefig(pl, figurespath * "scatterplot_genes_BAE_latdim$(l).svg")
+    savefig(pl, figurespath * "scatterplot_genes_BAE_latdim$(l).pdf")
 end
 
 for l in 1:size(Y, 2)
     pl = normalized_scatter_top_values(B_compL2Boost[:, l], genenames; top_n=15, dim=l)
-    savefig(pl, figurespath * "scatterplot_selGenes_compL2Boost_latdim$(l).svg")
+    savefig(pl, figurespath * "scatterplot_selGenes_compL2Boost_latdim$(l).pdf")
 end
 
 
@@ -258,13 +239,13 @@ celltype_test = celltype[test_inds];
 embedding_test_BAE = embedding_BAEUMAP[test_inds, :];
 Z_BAE_test = Z_BAE[test_inds, :];
 create_colored_umap_plot(st_dataMat, celltype_test, plotseed; embedding=embedding_test_BAE, precomputed=true, 
-                         save_plot=true, path=figurespath * "/mousedata_BAEumap_test.svg", 
+                         save_plot=true, path=figurespath * "/mousedata_BAEumap_test.pdf", 
                          colorlabel="Celltype", marker_size="40", legend_title="Cell type", show_axis=false
 );
 create_latent_umaps(st_dataMat, plotseed, Z_BAE_test; 
     figurespath=figurespath * "/test_BAE_(BAEUMAP)",
     precomputed=true, embedding=embedding_test_BAE, save_plot=true,
-    legend_title="Representation value", image_type=".svg", show_axis=false
+    legend_title="Representation value", image_type=".pdf", show_axis=false
 );
 
 
@@ -273,11 +254,11 @@ create_latent_umaps(st_dataMat, plotseed, Z_BAE_test;
 abscor_latrep_BAE_compL2Boost = abs.(cor(sort_Z_BAE, sort_Z_compL2Boost));
 abscor_latrep_BAE = abs.(cor(sort_Z_BAE, sort_Z_BAE));
 
-vegaheatmap(abscor_latrep_BAE_compL2Boost; path=figurespath * "/abscor_latentrep_BAE_compL2Boost.svg", 
+vegaheatmap(abscor_latrep_BAE_compL2Boost; path=figurespath * "/abscor_latentrep_BAE_compL2Boost.pdf", 
             xlabel="compL2Boost latent dimensions", ylabel="BAE latent dimensions", legend_title="Correlation", 
             scheme="reds", save_plot=true
 );
-vegaheatmap(abscor_latrep_BAE; path=figurespath * "/abscor_latentrep_BAE.svg", 
+vegaheatmap(abscor_latrep_BAE; path=figurespath * "/abscor_latentrep_BAE.pdf", 
             xlabel="Latent dimension", ylabel="Latent dimension", legend_title="Correlation", 
             scheme="reds", save_plot=true
 );
