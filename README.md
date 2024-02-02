@@ -70,7 +70,7 @@ All plots and data downloaded or generated while running the scripts are stored 
 2.1. **Navigate to the project directory**
    - Navigate to the directory of the cloned GitHub repository:
      ```bash
-     cd ~/Desktop/MyProjects/BoostingAutoencoder
+     cd ~/BoostingAutoencoder
      ```
        
 2.2. **Create the conda environment**
