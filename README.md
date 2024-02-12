@@ -3,19 +3,7 @@
 ## Overwiev
 This GitHub repository contains the code and scripts to define and train a boosting autoencoder (BAE) and to reproduce the results presented in our [manuscript](https://github.com/NiklasBrunn/BoostingAutoencoder/tree/main).
 
-## Author information for the manuscript
-> First/corresponding authors: Niklas Brunn<sup>12*+</sup>, Maren Hackenberg<sup>12*</sup><br>
-> Co-author: Tanja Vogel <sup>3</sup><br>
-> Senior author: Harald Binder<sup>124</sup>
->
-> <sup>1</sup> Institute of Medical Biometry and Statistics, Faculty of Medicine and Medical Center, University of Freiburg, Germany<br>
-> <sup>2</sup> Freiburg Center for Data Analysis and Modeling, University of Freiburg, Germany<br>
-> <sup>3</sup> Institute of Anatomy and Cell Biology, Department of Molecular Embryology, Faculty of Biology, University of Freiburg, Germany<br>
-> <sup>4</sup> Centre for Integrative Biological Signaling Studies (CIBSS), University of Freiburg, Germany<br>
-> <sup>*</sup> Corresponding author<br>
-> <sup>+</sup> Repository owner
-
-## What is it all about? 
+## What is it about? 
 Dimension reduction approaches are widely used for exploring cellular heterogeneity in single-cell RNA sequencing (scRNA-seq) data, e.g., for identifying two-dimensional visual representations where cell groups can be disentangled, followed by post-hoc analyses. While most approaches are data-driven or are challenging to interprete, it might still be useful to incorporate assumptions that reflect intuition on the underlying structure or the experimental design already as part of the dimension reduction. E.g., dimensions that help to distinguish between cell groups intuitively should be characterized by distinct small sets of genes, or the design in a time-series experiment should be incorporated such that temporal changes of cell states are characterized by gradual changes in corresponding gene sets.  
 We combine the advantages of two machine learning approaches, namely autoencoders for dimension reduction via deep learning and boosting for formalizing assumptions. Specifically, we use a componentwise boosting approach, which selects small sets of characteristic genes for each dimension, and allows for tailoring the selection logic to encode further assumptions, such as distinct cell groups or temporal patterns. Our approach facilitates interpretability by selecting different small sets of genes during optimization, where the gene sets explain the learned patterns in latent dimensions.
 
