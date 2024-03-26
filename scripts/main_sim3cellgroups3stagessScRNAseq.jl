@@ -131,13 +131,13 @@ BAE = Autoencoder(encoder, decoder);
 Random.seed!(batchseed);
 B = trainBAE(L, BAE; mode=mode, time_series=true, zdim=zdim, ϵ=ϵ, batchsize=batchsize, epochs=epochs);
 
-B_perm = zeros(size(X, 2));
+B_perm = zeros(size(B));
 for dim in 1:zdim
     for t in 1:length(L)
-        B_perm = hcat(B_perm, B[:, (t-1)*zdim+dim])
+        B_perm[:, zdim*(dim-1)+t] = B[:, (t-1)*zdim+dim]
     end
 end
-B_perm = B_perm[:, 2:end];
+
 
 #---Compute the latent representation and the correlation matrix:
 Z = X * B;
