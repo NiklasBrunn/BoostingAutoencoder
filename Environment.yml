@@ -116,4 +116,3 @@ dependencies:
   - xz=5.4.5=h80987f9_0
   - zlib=1.2.13=h53f4e23_5
   - zstd=1.5.5=h4f39d0f_0
-prefix: /Users/niklasbrunn/anaconda3/envs/myenv
