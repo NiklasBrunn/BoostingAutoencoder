@@ -1,7 +1,7 @@
 # Infusing structural assumptions into dimension reduction for single-cell RNA sequencing data to identify small gene sets
 
 ## Overview
-This GitHub repository contains the code and scripts to define and train a boosting autoencoder (BAE) and to reproduce the results presented in our [manuscript](https://github.com/NiklasBrunn/BoostingAutoencoder/tree/main).
+This GitHub repository contains the code and scripts to define and train a boosting autoencoder (BAE) and to reproduce the results presented in our [manuscript](https://www.biorxiv.org/content/10.1101/2024.02.15.580085v1.abstract).
 
 ## What is it about? 
 Dimension reduction approaches are widely used for exploring cellular heterogeneity in single-cell RNA sequencing (scRNA-seq) data, e.g., for identifying two-dimensional visual representations where cell groups can be disentangled, followed by post-hoc analyses. While most approaches are data-driven or are challenging to interprete, it might still be useful to incorporate assumptions that reflect intuition on the underlying structure or the experimental design already as part of the dimension reduction. E.g., dimensions that help to distinguish between cell groups intuitively should be characterized by distinct small sets of genes, or the design in a time-series experiment should be incorporated such that temporal changes of cell states are characterized by gradual changes in corresponding gene sets.  
