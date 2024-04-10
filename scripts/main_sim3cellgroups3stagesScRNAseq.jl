@@ -134,7 +134,7 @@ B = trainBAE(L, BAE; mode=mode, time_series=true, zdim=zdim, ϵ=ϵ, batchsize=ba
 B_perm = zeros(size(B));
 for dim in 1:zdim
     for t in 1:length(L)
-        B_perm[:, zdim*(dim-1)+t] = B[:, (t-1)*zdim+dim]
+        B_perm[:, length(L)*(dim-1)+t] = B[:, (t-1)*zdim+dim]
     end
 end
 
