@@ -86,6 +86,9 @@ batchsize = 800;
 ϵ = 0.01;
 ν = 0.01;
 
+decay_VAE = 0.1;
+β_VAE = 1.0f0;
+
 α_L1AE = 0.075;
 α_corAE = 0.1;
 
@@ -219,6 +222,55 @@ while epoch <= num_epochs
     epoch+=1;
 
 end
+
+
+
+#------------------------------
+# Training VAE and creating and saving plots:
+#------------------------------
+#---Build VAE:
+Random.seed!(modelseed); 
+
+VAE_encoder = Dense(p, 2*zdim, initW=Flux.glorot_uniform); 
+
+#Gaußian decoder:
+#VAE_decoder = Chain( 
+#                Dense(zdim, 2*p, tanh, initW=Flux.glorot_uniform), 
+#                Dense(2*p, 2*p, initW = Flux.glorot_uniform)    
+#); 
+#Fixed var decoder:
+VAE_decoder = Chain( 
+                Dense(zdim, p, tanh, initW=Flux.glorot_uniform), 
+                Dense(p, p, initW = Flux.glorot_uniform)    
+); 
+
+VAE = Autoencoder(VAE_encoder, VAE_decoder); 
+
+
+#---Train VAE and generating and saving plots:
+#train_gaußianVAE!(X, VAE; 
+#    η=ν, 
+#    β=β_VAE, 
+#    decay=decay_VAE,
+#    epochs=num_epochs, 
+#    batch_size =batchsize, 
+#    save_data=true, 
+#    plot_epochs=plot_epochs, 
+#    figures_path=figurespath, 
+#    batchseed=batchseed
+#);
+train_gaußianVAE_fixedvariance!(X, VAE; 
+    η=ν, 
+    var=0.01f0,
+    β=β_VAE, 
+    decay=decay_VAE,
+    epochs=num_epochs, 
+    batch_size =batchsize, 
+    save_data=true, 
+    plot_epochs=plot_epochs, 
+    figures_path=figurespath, 
+    batchseed=batchseed
+);
 
 
 

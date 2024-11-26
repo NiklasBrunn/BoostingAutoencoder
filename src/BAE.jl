@@ -6,7 +6,9 @@ using Random;
 using Statistics;
 using StatsBase;
 using DelimitedFiles;
+using Distances;
 using GZip;
+using CSV;
 using XLSX;
 using Plots;
 using LinearAlgebra;
@@ -28,9 +30,9 @@ include("plotting.jl");
 
 export 
     # training function for BAE and timeBAE:
-    trainBAE, 
+    trainBAE, train_gaußianVAE_fixedvariance!, train_gaußianVAE!,
     # loss functions for BAE, timeBAE, and AE versions:
-    loss_z, loss, loss_wrapper, jointLoss, jointLoss_wrapper, loss_L1reg, loss_wrapper_L1reg, corpen, loss_correg, loss_wrapper_correg,
+    loss_z, loss, loss_wrapper, jointLoss, jointLoss_wrapper, loss_L1reg, loss_wrapper_L1reg, corpen, loss_correg, loss_wrapper_correg, vae_loss_gaußian_fixedvariance, vae_loss_gaußian, VAE_loss_wrapper, VAE_loss_wrapper_fixedvariance,
     # BAE model architecture:
     LinearLayer, Autoencoder,
     # componentwise boosting functions:
@@ -40,7 +42,7 @@ export
     # data simulation functions:
     simulate_10StagesScRNAseq, simulate_3cellgroups3stagesScRNAseq, addstages!,
     # utility functions:
-    get_latdim_grads, prcomps, generate_umap, find_zero_columns, split_traintestdata, create_sorted_numlabels_and_datamat, onehotcelltypes,
+    get_latdim_grads, prcomps, generate_umap, find_zero_columns, split_traintestdata, create_sorted_numlabels_and_datamat, onehotcelltypes, quantile_elements, find_matching_type, find_matching_type_per_BAEdim, get_nonzero_rows, divide_dimensions, reparameterize, get_VAE_latentRepresentation, get_top_selected_genes, adjust_pvalues, coefficients_tTest, predict_celllabels,
     # preprocessing functions:
     standardize, log1transform, downloadcountsandload, phenodata, expressiondata, estimatesizefactorsformatrix, normalizecountdata
 #

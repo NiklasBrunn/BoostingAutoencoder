@@ -51,6 +51,7 @@ xnorm = normalizecountdata(x);
 #---(opt.) Load pre-selected marker-and receptor gene information (Tasic et. al., Nat Neuroscience 2016):
 #markergenes = readdlm(datapath * "gene_subtypes.csv", ';')[2:end, 1];
 #receptorgenes = [i  for i = readdlm(datapath * "S15.txt")[:, 2:end][:] if i!="" ];
+#markergenes = intersect(genenames, markergenes);
 
 #---Extract cell type information from sampleinfo:
 celltype = [split(i)[1] for i = sampleinfo.PrimaryType];
@@ -89,6 +90,8 @@ writedlm(datapath * "corticalMouseDataMat_allgenes_st.txt", x_all_st);
 writedlm(datapath * "corticalMouseDataMat_allgenes_log1.txt", x_all_log1);
 writedlm(datapath * "celltype.txt", celltype);
 writedlm(datapath * "genenames.txt", genenames);
+#writedlm(datapath * "receptorgenes.txt", receptorgenes);
+#writedlm(datapath * "markergenes.txt", markergenes);
 #writedlm(datapath * "corticalMouseDataMat_allgenes.txt", transpose(x[:, neuralcells]));
 #writedlm(datapath * "corticalMouseDataMat_norm.txt", xnorm_sel);
 #writedlm(datapath * "corticalMouseDataMat_log1.txt", x_log1);

@@ -5,6 +5,7 @@ import pandas as pd
 import statistics
 import matplotlib.pyplot as plt
 import random
+from scipy import stats
 from sklearn.metrics import silhouette_score
 from sklearn.metrics import adjusted_rand_score
 
@@ -142,7 +143,59 @@ Q1_BAE = np.percentile(BAE_sil_scores, 25)
 Q3_BAE = np.percentile(BAE_sil_scores, 75)  
 IQR_BAE = Q3_BAE - Q1_BAE
 
+Q1_PCA = np.percentile(PCA_sil_scores, 25)  
+Q3_PCA = np.percentile(PCA_sil_scores, 75)  
+IQR_PCA = Q3_PCA - Q1_PCA
+
+
+sem_BAE = stats.sem(BAE_sil_scores)  # Standard error
+sem_PCA = stats.sem(PCA_sil_scores)  # Standard error
+
+confidence_interval_BAE = stats.t.interval(0.95, len(BAE_sil_scores)-1, loc=statistics.mean(BAE_sil_scores), scale=sem_BAE)
+confidence_interval_PCA = stats.t.interval(0.95, len(PCA_sil_scores)-1, loc=statistics.mean(PCA_sil_scores), scale=sem_PCA)
+
+
+
 print(f'Median Silhouette score BAE:{statistics.median(BAE_sil_scores)}') 
 print(f'Median Silhouette score PCA:{statistics.median(PCA_sil_scores)}') 
+print(f'Mean Silhouette score BAE:{statistics.mean(BAE_sil_scores)}') 
+print(f'Mean Silhouette score PCA:{statistics.mean(PCA_sil_scores)}') 
+print(f"95% Confidence Interval Silhouette score BAE: {confidence_interval_BAE}")
+print(f"95% Confidence Interval Silhouette score PCA: {confidence_interval_PCA}")
 print(f'Median adjusted Rand index BAE/PCA:{statistics.median(ARis)}') 
 print(f'Interquartile range Silhouette score BAE:{IQR_BAE}') 
+print(f'Interquartile range Silhouette score BAE:{IQR_PCA}') 
+
+
+
+###################################################################################################
+#---Test for a significant difference between the Silhouette scores of BAE and PCA representations:
+###################################################################################################
+from scipy import stats
+
+# Assuming aws_louvain and aws_kmeans are your AWS score arrays
+# aws_louvain = [...]
+# aws_kmeans = [...]
+
+# Check for normality
+_, p_BAE = stats.shapiro(BAE_sil_scores)
+_, p_PCA = stats.shapiro(PCA_sil_scores)
+
+if p_BAE > 0.05 and p_PCA > 0.05:
+    print("Data has passed the normality test. Performing a two-sided unpaired t-test")
+    # Data is normally distributed
+    # Check for equal variances
+    _, p_var = stats.levene(BAE_sil_scores, PCA_sil_scores)
+    equal_var = p_var > 0.05
+    # Perform t-test
+    t_stat, p_value = stats.ttest_ind(BAE_sil_scores, PCA_sil_scores, equal_var=equal_var)
+else:
+    print("Data has not passed the normality test. Performing Mann-Whitney U test")
+    # Data is not normally distributed
+    # Perform Mann-Whitney U test
+    u_stat, p_value = stats.mannwhitneyu(BAE_sil_scores, PCA_sil_scores, alternative='two-sided')
+
+print(f"p-value for testing for difference between BAE and PCA Silhouette scores: {p_value}")
+# Interpret p-value as per the significance level
+
+

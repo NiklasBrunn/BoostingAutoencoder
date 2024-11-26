@@ -56,6 +56,12 @@ sc.pp.filter_genes(adata_ctype, min_cells=10)
 
 
 
+#---Save the count matrix (log1-transformed counts):
+#logging.info('Saving data ...')
+#np.savetxt(datapath + 'corticalMouseDataMat_log1.txt', adata.X, delimiter="\t")
+#np.savetxt(datapath + 'genenames.txt', adata.var_names, fmt='%s', delimiter="\n")
+
+
 #---Select highly variable genes:
 #Using flavor=seurat since counts are not integer values ...
 logging.info('Selecting HVGs ...')
@@ -69,6 +75,7 @@ logging.info('Saving data ...')
 adata_sub = adata[:, adata.var['highly_variable']]
 adata_ctype_sub = adata_ctype[:, adata_ctype.var['highly_variable']]
 
+np.savetxt(datapath + 'corticalMouseDataMat_log1.txt', adata.X, delimiter="\t")
 np.savetxt(datapath + 'corticalMouseDataMat_HVGs_log1.txt', adata_sub.X, delimiter="\t")
 np.savetxt(datapath + 'corticalMouseDataMat_' + ctype + '_HVGs_log1.txt', adata_ctype_sub.X, delimiter="\t")
 

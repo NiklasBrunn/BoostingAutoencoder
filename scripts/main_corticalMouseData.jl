@@ -31,6 +31,7 @@ using DelimitedFiles;
 using Random;
 using Flux;
 using Statistics;
+using StatsBase;
 using DataFrames;
 using Plots;
 
@@ -47,6 +48,10 @@ st_dataMat = readdlm(datapath * "corticalMouseDataMat_HVGs_st.txt");
 log1_dataMat = readdlm(datapath * "corticalMouseDataMat_HVGs_log1.txt");
 celltype = vec(readdlm(datapath * "celltype.txt"));
 genenames = vec(readdlm(datapath * "genenames_HVGs.txt"));
+#markergenes = vec(readdlm(datapath * "markergenes.txt"));
+#markergenes = intersect(genenames, markergenes); # Only keep marker genes that are in the selected list of HVGs
+#receptorgenes = vec(readdlm(datapath * "receptorgenes.txt"));
+#receptorgenes = intersect(genenames, receptorgenes); # Only keep receptor genes that are in the selected list of HVGs
 
 
 #---Create one-hot encoded labels:
@@ -74,8 +79,6 @@ M_compL2Boost = 100;
 
 ϵ_compL2Boost = 0.02; 
 
-num_topgenes = 2;
-
 
 #---compL2Boost:
 B_compL2Boost = zeros(p, size(Y, 2));
@@ -83,13 +86,16 @@ for l in 1:size(Y, 2)
     B_compL2Boost[:, l] = compL2Boost!(B_compL2Boost[:, l], X_train_st, Y_train[:, l], ϵ_compL2Boost, M_compL2Boost);
 end
 
+#---Get componentwise boosting representation (and sorted by cell type version):
 Z_compL2Boost = st_dataMat * B_compL2Boost;
 sort_Z_compL2Boost = sorted_st_datamat * B_compL2Boost;
 
-#Determine compL2Boost top genes per latent dimension:
+#---Determine compL2Boost top genes per latent dimension:
+selGenes_dict_compL2Boost, selGenes_df_compL2Boost = get_top_selected_genes(B_compL2Boost, genenames);
 for i in 1:size(Y, 2)
-    println("Top $(num_topgenes) selected genes by compL2Boost for cell type $(i): $(genenames[sortperm(abs.(B_compL2Boost[:, i]), rev=true)[1:num_topgenes]])")
+    println("Top selected genes by compL2Boost for cell type $(i): $(selGenes_dict_compL2Boost[i])")
 end
+
 
 
 #------------------------------
@@ -111,8 +117,6 @@ epochs = 25;
 
 ϵ = 0.01;
 
-num_topgenes = 2;
-
 
 
 #---Build BAE:
@@ -130,16 +134,23 @@ BAE = Autoencoder(encoder, decoder);
 Random.seed!(batchseed); 
 B_BAE = trainBAE(X_train_st, BAE; mode=mode, zdim=zdim, ϵ=ϵ, batchsize=batchsize, epochs=epochs);
 
+#---Save the BAE encoder weight matrix:
+#writedlm(datapath * "BAE_encoderWeightMatrix_mode$(mode)_zdim$(zdim)_batchs$(batchsize)_epochs$(epochs)_eps$(ϵ)_mseed$(modelseed)_bseed$(batchseed).txt", B);
+
+#---Get latent representation (and sorted by cell type version):
 Z_BAE = st_dataMat * B_BAE;
 sort_Z_BAE = sorted_st_datamat * B_BAE;
 
-#Determine BAE top genes per latent dimension:
+#---Determine BAE top genes per latent dimension using the changepoint strategy:
+selGenes_dict, selGenes_df = get_top_selected_genes(B_BAE, genenames; 
+    data_path=datapath, 
+    save_data=true
+);
 for i in 1:zdim
-    println("Top $(num_topgenes) selected genes by BAE in zdim $(i): $(genenames[sortperm(abs.(B_BAE[:, i]), rev=true)[1:num_topgenes]])")
+    println("Top selected genes by BAE in zdim $(i): $(selGenes_dict[i])")
 end
 
-#---Save the BAE encoder weight matrix:
-#writedlm(datapath * "BAE_encoderWeightMatrix_mode$(mode)_zdim$(zdim)_batchs$(batchsize)_epochs$(epochs)_eps$(ϵ)_mseed$(modelseed)_bseed$(batchseed).txt", B);
+@info "Percentage of nonzero weights in the BAE encoder weight matrix: $(length(findall(x->x!=0, B_BAE))/length(B_BAE))"
 
 
 
@@ -176,7 +187,6 @@ embedding_pcaUMAP = generate_umap(pcs[:, 1:num_pcs], plotseed);
 embedding_BAEUMAP = generate_umap(Z_BAE, plotseed);
 embedding_compL2Boost = generate_umap(Z_compL2Boost, plotseed);
 
-
 create_colored_umap_plot(st_dataMat, celltype, plotseed; embedding=embedding_BAEUMAP, 
                          precomputed=true, save_plot=true, path=figurespath * "/mousedata_(BAE)umap.pdf", 
                          colorlabel="Celltype", legend_title="Cell type", show_axis=false
@@ -204,7 +214,6 @@ create_colored_umap_plot(st_dataMat, binary_obsvec, plotseed; embedding=embeddin
                          scheme="paired", show_axis=false
 );
 
-
 create_latent_umaps(st_dataMat, plotseed, Z_BAE; 
                     figurespath=figurespath * "/BAE_(BAEUMAP)",
                     precomputed=true, embedding=embedding_BAEUMAP, save_plot=true,
@@ -221,8 +230,6 @@ create_latent_umaps(st_dataMat, plotseed, Z_compL2Boost;
                     legend_title="", image_type=".pdf", show_axis=false
 );
 
-
-
 #---Creating Scatterplots showing top selected genes per latent dimension:
 for l in 1:zdim
     pl = normalized_scatter_top_values(B_BAE[:, l], genenames; top_n=10, dim=l)
@@ -234,7 +241,23 @@ for l in 1:size(Y, 2)
     savefig(pl, figurespath * "scatterplot_selGenes_compL2Boost_latdim$(l).pdf")
 end
 
+#---Predict cell types of the held out test data based on closest cells in the latent space of the train data:
+true_labels_test = celltype[test_inds];
+Z_BAE_test = Z_BAE[test_inds, :];
+true_labels_train = celltype[train_inds];
+Z_BAE_train = Z_BAE[train_inds, :];
 
+pred_labels = predict_celllabels(Z_BAE_test, Z_BAE_train, true_labels_train; k=10);
+
+accuracy = sum(pred_labels .== true_labels_test) / length(pred_labels);
+@info "Accuracy of the cell type predictions on the held out test data based on the BAE latent representation: $(round(accuracy*100, digits=2))%."
+#missclassified_inds = findall(x->x==0, vec(pred_labels .== true_labels_test));
+#true_labels_test[missclassified_inds];
+
+#---Create UMAP plots for the held out test data:
+# Add a cell of type Igtp to the test data for plotting because it is missing (this is just for the color coding ...):
+Igtp_inds = findall(x->x=="Igtp", celltype);
+test_inds = vcat(test_inds, Igtp_inds[1]);
 celltype_test = celltype[test_inds];
 embedding_test_BAE = embedding_BAEUMAP[test_inds, :];
 Z_BAE_test = Z_BAE[test_inds, :];
@@ -248,8 +271,6 @@ create_latent_umaps(st_dataMat, plotseed, Z_BAE_test;
     legend_title="Representation value", image_type=".pdf", show_axis=false
 );
 
-
-
 #---Create cor-heatmaps between compL2Boost and BAE latent representation:
 abscor_latrep_BAE_compL2Boost = abs.(cor(sort_Z_BAE, sort_Z_compL2Boost));
 abscor_latrep_BAE = abs.(cor(sort_Z_BAE, sort_Z_BAE));
@@ -261,4 +282,10 @@ vegaheatmap(abscor_latrep_BAE_compL2Boost; path=figurespath * "/abscor_latentrep
 vegaheatmap(abscor_latrep_BAE; path=figurespath * "/abscor_latentrep_BAE.pdf", 
             xlabel="Latent dimension", ylabel="Latent dimension", legend_title="Correlation", 
             scheme="reds", save_plot=true
+);
+
+#---Determine matching cell types for latent dimensions:
+df, df_filtered = find_matching_type_per_BAEdim(Z_BAE, String.(celltype); 
+    upper=0.9, lower=0.1, threshold=0.5, 
+    save_plot=true, figurespath=figurespath
 );

@@ -410,3 +410,64 @@ Returns:
     - `loss_function::Function`: A loss function that can be used to calculate the loss with CORREG for a given input data.
 """
 loss_wrapper_correg(AE::Autoencoder, α) = function(Xt::AbstractMatrix) loss_correg(Xt, AE, α) end
+
+
+# Loss function
+function vae_loss_gaußian(x::AbstractArray{T}, encoder::Union{Chain, Dense}, decoder::Union{Chain, Dense}; β::Float32=1.0f0, average::Union{Bool, String}=false) where T
+    # encoder mu and logvar
+    mu_enc, logvar_enc = divide_dimensions(encoder(x))
+
+    p, n = size(x)
+
+    # reparametrization trick
+    z = reparameterize(mu_enc, logvar_enc)
+
+    # decoder mu and logvar
+    mu_dec, logvar_dec = divide_dimensions(decoder(z))
+
+    # Reconstruction loss
+    recon_loss = 0.5f0 * sum((x .- mu_dec).^2 ./ exp.(logvar_dec) .+ logvar_dec) # Shrinking variance problem: If var=0 then L_rec -> inf! => use fixed var VAE version instead? Or just MSE Loss? (or add a small constant to the denominator?)
+
+
+    # KL divergence
+    kl_loss = -0.5f0 * sum(1f0 .+ logvar_enc .- mu_enc.^2 .- exp.(logvar_enc))
+
+    if average
+        return (recon_loss + β * kl_loss) / n
+    elseif average == "batch_feature"
+        return (recon_loss + β * kl_loss) / n*p
+    else
+        return recon_loss + β * kl_loss
+    end
+end
+
+# Loss function
+function vae_loss_gaußian_fixedvariance(x::AbstractArray{T}, encoder::Union{Chain, Dense}, decoder::Union{Chain, Dense}; β::Float32=1.0f0, var::Float32=0.1f0, average::Union{Bool, String}=false) where T
+    # encoder mu and logvar
+    mu_enc, logvar_enc = divide_dimensions(encoder(x))
+
+    p, n = size(x)
+
+    # reparametrization trick
+    z = reparameterize(mu_enc, logvar_enc)
+
+    # decoder mu and logvar
+    mu_dec = decoder(z)
+
+    # Reconstruction loss
+    recon_loss = (0.5f0 / var) * sum((x .- mu_dec).^2) #+ 0.5f0 * size(x, 2) * log(2f0 * Float32(π) * var) constant term w.r.t. network parameters
+
+    # KL divergence
+    kl_loss = -0.5f0 * sum(1f0 .+ logvar_enc .- mu_enc.^2 .- exp.(logvar_enc))
+
+    if average
+        return (recon_loss + β * kl_loss) / n
+    elseif average == "batch_feature"
+        return (recon_loss + β * kl_loss) / n*p
+    else
+        return recon_loss + β * kl_loss
+    end
+end
+
+VAE_loss_wrapper(VAE::Autoencoder, β::Float32) = function(x::AbstractArray{T}) where T vae_loss_gaußian(x, VAE.encoder, VAE.decoder; β=β) end
+VAE_loss_wrapper_fixedvariance(VAE::Autoencoder, β::Float32, var::Float32) = function(x::AbstractArray{T}) where T vae_loss_gaußian_fixedvariance(x, VAE.encoder, VAE.decoder; β=β, var=var) end
