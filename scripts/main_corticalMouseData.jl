@@ -48,10 +48,6 @@ st_dataMat = readdlm(datapath * "corticalMouseDataMat_HVGs_st.txt");
 log1_dataMat = readdlm(datapath * "corticalMouseDataMat_HVGs_log1.txt");
 celltype = vec(readdlm(datapath * "celltype.txt"));
 genenames = vec(readdlm(datapath * "genenames_HVGs.txt"));
-#markergenes = vec(readdlm(datapath * "markergenes.txt"));
-#markergenes = intersect(genenames, markergenes); # Only keep marker genes that are in the selected list of HVGs
-#receptorgenes = vec(readdlm(datapath * "receptorgenes.txt"));
-#receptorgenes = intersect(genenames, receptorgenes); # Only keep receptor genes that are in the selected list of HVGs
 
 
 #---Create one-hot encoded labels:

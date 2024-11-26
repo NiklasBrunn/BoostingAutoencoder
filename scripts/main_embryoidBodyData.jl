@@ -17,8 +17,8 @@ Pkg.status()
 # all paths are relative to the repository main folder
 projectpath = joinpath(@__DIR__, "../"); 
 srcpath = projectpath * "src/";
-datapath = projectpath * "data/embryoidBodyData/"; #"data/embryoidBodyData_old/embryoidBodyData/"
-figurespath = projectpath * "figures/embryoidBodyData/";  #"figures/embryoidBodyData_old/"
+datapath = projectpath * "data/embryoidBodyData/"; 
+figurespath = projectpath * "figures/embryoidBodyData/";  
 if !isdir(figurespath)
     # Create the folder if it does not exist
     mkdir(figurespath)
@@ -51,13 +51,10 @@ X_st = standardize(X);
 DEGs = string.(vec(readdlm(datapath * "EB_data_DEGs.txt"))); 
 
 timepoints = Int.(vec(readdlm(datapath * "EB_data_filt_timepoints.txt")));
-#timepoints = Int.(vec(readdlm(datapath * "EB_data_timepoints.txt")));
 
 clusters = Int.(vec(readdlm(datapath * "EB_data_filt_leiden_res0_025.txt")[2:end]));
-#clusters = Int.(vec(readdlm(datapath * "EB_data_leiden_res0_025.txt")[2:end]));
 
 EB_umap_coords_df = CSV.File(datapath * "EB_data_filt_umap_coords.csv") |> DataFrame;
-#EB_umap_coords_df = CSV.File(datapath * "EB_data_umap_coordinates_noFirstTP.csv") |> DataFrame;
 EB_umap_coords = Matrix(EB_umap_coords_df[:, ["UMAP1", "UMAP2"]]);
 
 EB_df = DataFrame(X, :auto);
@@ -84,17 +81,17 @@ n, p = size(X);
 # Define and train timeBAE:
 #------------------------------
 #---Seeds for reproducibility:
-modelseed = 1; #14 #1
+modelseed = 1; 
 batchseed = 5; 
 
 #---Hyperparameters for training:
 zdim = 4; 
 
-batchsize = 1500; #600 #1500
+batchsize = 1500; 
 
-epochs = 15; #10 #15
+epochs = 15; 
 
-ϵ = 0.01; #0.02 #0.01
+ϵ = 0.01; 
 
 mode = "alternating"; #"jointLoss" #"alternating"
 

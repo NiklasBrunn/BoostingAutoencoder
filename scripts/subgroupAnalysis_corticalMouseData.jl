@@ -86,10 +86,16 @@ Random.seed!(batchseed);
 B_BAE = trainBAE(st_dataMat, BAE; mode=mode, zdim=zdim, ϵ=ϵ, batchsize=batchsize, epochs=epochs);
 Z_BAE = st_dataMat * B_BAE;
 
-#determine BAE top abs-val genes per latDim:
+#---Determine BAE top genes per latent dimension using the changepoint strategy:
+selGenes_dict, selGenes_df = get_top_selected_genes(B_BAE, genenames; 
+    data_path=datapath, 
+    save_data=true
+);
 for i in 1:zdim
-    println("Top $(num_topgenes) selected genes by BAE in zdim $(i): $(genenames[sortperm(abs.(B_BAE[:, i]), rev=true)[1:num_topgenes]])")
+    println("Top selected genes by BAE in zdim $(i): $(selGenes_dict[i])")
 end
+
+@info "Percentage of nonzero weights in the BAE encoder weight matrix: $(length(findall(x->x!=0, B_BAE))/length(B_BAE))"
 
 
 
