@@ -112,12 +112,8 @@ BAE = Autoencoder(encoder, decoder);
 Random.seed!(batchseed);
 B = trainBAE(L_st, BAE; mode=mode, time_series=true, zdim=zdim, ϵ=ϵ, batchsize=batchsize, epochs=epochs);
 
-B_perm = zeros(size(B));
-for dim in 1:zdim
-    for t in 1:length(L)
-        B_perm[:, length(L)*(dim-1)+t] = B[:, (t-1)*zdim+dim]
-    end
-end
+#---Reorganize latent dimensions:
+B_perm = permute_latentDims(B, zdim, length(L));
 
 #---Determine BAE top genes per latent dimension using the changepoint strategy:
 selGenes_dict, selGenes_df = get_top_selected_genes(B_perm, DEGs; 
@@ -251,13 +247,7 @@ end
 B_LR_filtered = B_LR .* (p_vals.<0.05)
 
 #---Permute the columns of B_LR_filtered such that the columns dimensions are grouped by the clusters and sorted by timepoints within the clusters:
-B_LR_perm = zeros(size(B_LR));
-for dim in 1:length(unique(clusters))
-    for t in 1:length(L)
-        B_LR_perm[:, length(L)*(dim-1)+t] = B_LR_filtered[:, (t-1)*length(unique(clusters))+dim]
-        #B_LR_perm[:, length(L)*(dim-1)+t] = B_LR[:, (t-1)*length(unique(clusters))+dim]
-    end
-end
+B_LR_perm = permute_latentDims(B_LR_filtered, length(unique(clusters)), length(L));
 
 #---Compute the predictions and the correlation matrix:
 Z_LR = X_st * B_LR_perm;

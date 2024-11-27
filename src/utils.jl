@@ -519,3 +519,14 @@ function predict_celllabels(Z_test::AbstractMatrix{T}, Z_train::AbstractMatrix{T
 
     return pred_labels
 end
+
+function permute_latentDims(B::AbstractMatrix{E}, zdim::Int, T::Int) where E
+    @info "Permuting the latent dimensions of the timeBAE encoder weight matrix. Dimensions are reorganized such that the columns are grouped by the latent dimensions and sorted by timepoints within the latent dimensions, i.e., the first column in the new matrix corresponds to the first latent dimension at timepoint 1, the second column corresponds to the first latent dimension at timepoint 2, and so on ..."
+    B_perm = zeros(E, size(B))
+    for dim in 1:zdim
+        for t in 1:T
+            B_perm[:, T*(dim-1)+t] = B[:, (t-1)*zdim+dim]
+        end
+    end
+    return B_perm
+end

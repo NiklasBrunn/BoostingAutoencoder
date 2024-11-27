@@ -42,7 +42,7 @@ export
     # data simulation functions:
     simulate_10StagesScRNAseq, simulate_3cellgroups3stagesScRNAseq, addstages!,
     # utility functions:
-    get_latdim_grads, prcomps, generate_umap, find_zero_columns, split_traintestdata, create_sorted_numlabels_and_datamat, onehotcelltypes, quantile_elements, find_matching_type, find_matching_type_per_BAEdim, get_nonzero_rows, divide_dimensions, reparameterize, get_VAE_latentRepresentation, get_top_selected_genes, adjust_pvalues, coefficients_tTest, predict_celllabels,
+    get_latdim_grads, prcomps, generate_umap, find_zero_columns, split_traintestdata, create_sorted_numlabels_and_datamat, onehotcelltypes, quantile_elements, find_matching_type, find_matching_type_per_BAEdim, get_nonzero_rows, divide_dimensions, reparameterize, get_VAE_latentRepresentation, get_top_selected_genes, adjust_pvalues, coefficients_tTest, predict_celllabels, permute_latentDims,
     # preprocessing functions:
     standardize, log1transform, downloadcountsandload, phenodata, expressiondata, estimatesizefactorsformatrix, normalizecountdata
 #
