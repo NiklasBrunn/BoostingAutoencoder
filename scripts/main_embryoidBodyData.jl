@@ -38,6 +38,7 @@ using MultivariateStats;
 using LinearAlgebra;
 using Distributions;
 using XLSX;
+#using BenchmarkTools;
 
 
 
@@ -111,6 +112,7 @@ BAE = Autoencoder(encoder, decoder);
 #---Train timeBAE:
 Random.seed!(batchseed);
 B = trainBAE(L_st, BAE; mode=mode, time_series=true, zdim=zdim, ϵ=ϵ, batchsize=batchsize, epochs=epochs);
+#@btime B = trainBAE($L_st, $BAE; mode=$mode, time_series=$true, zdim=$zdim, ϵ=$ϵ, batchsize=$batchsize, epochs=$epochs); #benchmarking
 
 #---Reorganize latent dimensions:
 B_perm = permute_latentDims(B, zdim, length(L));

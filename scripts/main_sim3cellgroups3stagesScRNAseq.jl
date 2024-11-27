@@ -30,6 +30,7 @@ using .BoostingAutoEncoder;
 using Random;
 using Flux;
 using Statistics;
+#using BenchmarkTools;
 
 
 
@@ -140,6 +141,7 @@ BAE = Autoencoder(encoder, decoder);
 #---Train timeBAE:
 Random.seed!(batchseed);
 B = trainBAE(L, BAE; mode=mode, time_series=true, strategy="transfer", zdim=zdim, ϵ=ϵ, batchsize=batchsize, epochs=epochs);
+#@btime B = trainBAE($L, $BAE; mode=$mode, time_series=$true, strategy=$"transfer", zdim=$zdim, ϵ=$ϵ, batchsize=$batchsize, epochs=$epochs); #benchmarking
 
 #---Reorganize latent dimensions:
 B_perm = permute_latentDims(B, zdim, length(L));

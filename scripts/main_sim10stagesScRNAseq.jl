@@ -27,6 +27,10 @@ end
 #---Include functions:
 include(projectpath * "/src/BAE.jl");
 using .BoostingAutoEncoder;
+using Random;
+using Flux;
+using Statistics;
+#using BenchmarkTools;
 
 
 
@@ -52,6 +56,7 @@ p = size(X, 2);
 #writedlm(datapath * "sim10stagesScRNAseqData_standardized", X_st);
 
 #---Create and save plots of the data matrices:
+@info "Creating and saving plots of the data matrices ..."
 vegaheatmap(X_dicho; 
     path=figurespath * "sim10stagesScRNAseqData_binary.pdf", xlabel="Gene", ylabel="Observation",
     legend_title="Gene expression", color_field="value:o", scheme="paired", save_plot=true
@@ -64,6 +69,7 @@ vegaheatmap(X_st;
     path=figurespath * "sim10stagesScRNAseqData_st.pdf", xlabel="Gene", ylabel="Observation",
     legend_title="Gene expression", color_field="value",scheme="inferno", save_plot=true, set_domain_mid=true
 );
+@info "Plots of the data matrices were saved in the folder: $(figurespath)"
 
 
 
@@ -103,9 +109,12 @@ BAE = Autoencoder(encoder, decoder);
 #---Train BAE (alternating version):
 Random.seed!(batchseed);
 B = trainBAE(X, BAE; mode=mode, zdim=zdim, ϵ=ϵ, batchsize=batchsize, epochs=epochs);
+#@btime B = trainBAE($X, $BAE; mode=$mode, zdim=$zdim, ϵ=$ϵ, batchsize=$batchsize, epochs=$epochs); #benchmarking
+
+#---Permute the columns of B for better visualization:
 B_perm = hcat(B[:, 8], B[:, 4], B[:, 6], B[:, 10], B[:, 2],
               B[:, 5], B[:, 9], B[:, 7], B[:, 1], B[:, 3]
-); #permute the columns of B for better visualization
+);
 
 #---Compute the latent representation and the correlation matrix:
 Z = X * B;

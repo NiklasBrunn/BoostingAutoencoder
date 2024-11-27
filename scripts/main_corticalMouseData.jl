@@ -34,6 +34,7 @@ using Statistics;
 using StatsBase;
 using DataFrames;
 using Plots;
+#using BenchmarkTools;
 
 
 
@@ -129,6 +130,7 @@ BAE = Autoencoder(encoder, decoder);
 #---Training BAE:
 Random.seed!(batchseed); 
 B_BAE = trainBAE(X_train_st, BAE; mode=mode, zdim=zdim, ϵ=ϵ, batchsize=batchsize, epochs=epochs);
+#@btime B_BAE = trainBAE($X_train_st, $BAE; mode=$mode, zdim=$zdim, ϵ=$ϵ, batchsize=$batchsize, epochs=$epochs); #for benchmarking
 
 #---Save the BAE encoder weight matrix:
 #writedlm(datapath * "BAE_encoderWeightMatrix_mode$(mode)_zdim$(zdim)_batchs$(batchsize)_epochs$(epochs)_eps$(ϵ)_mseed$(modelseed)_bseed$(batchseed).txt", B);
