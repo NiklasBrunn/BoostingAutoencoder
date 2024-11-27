@@ -287,14 +287,33 @@ println("95% Confidence Interval for the percentage of zero elements in the enco
 ##########################################
 #BAE application to the truncated dataset:
 ##########################################
-#---Load data:
+#---Specify if the top genes shall be removed and replaced, or only removed:
+replace = true; #false
+
+#---Load and define noise data:
+# log1p expressions and genenames of all genes:
+X_log1_allgenes = readdlm(datapath * "corticalMouseDataMat_allgenes_log1.txt");
+all_genenames = vec(readdlm(datapath * "genenames.txt"));
+
+# log1p expressions and genenames of non-HVGs:
+non_hvg_inds = setdiff(1:length(all_genenames), findall(x->x in genenames, all_genenames));
+X_log1_non_hvgs = X_log1_allgenes[:, non_hvg_inds];
+non_hvgs = all_genenames[non_hvg_inds];
+
+# Subset to the non-HVGs that are nonzero:
+nonzero_inds_none_hvgs = findall(x->x!=0, vec(sum(X_log1_non_hvgs, dims=1)));
+X_log1_non_hvgs_nonzero = X_log1_non_hvgs[:, nonzero_inds_none_hvgs];
+non_hvgs_nonezero = non_hvgs[nonzero_inds_none_hvgs];
+
+# Shuffle the genes in the data and in the genenames vector:
+Random.seed!(42);
+shuffeled_gene_inds = shuffle(nonzero_inds_none_hvgs);
+X_noise = X_log1_non_hvgs_nonzero[:, shuffeled_gene_inds];
+noise_genes = non_hvgs_nonezero[shuffeled_gene_inds];
+
+#---Load selected gene data:
 data = readdlm(datapath * "sel_nonzeroBAEGenes.txt", ' ')
 selGenes_list = [filter!(x -> x != "", data[i, :]) for i in 1:size(data, 1)]
-
-B = [];
-for seed in Seeds
-    push!(B, readdlm(datapath * "B_BAE_Seed_$(seed).txt"))
-end
 
 #---Generate a histogram of the selected genes across Seeds:
 string_vector = vcat(selGenes_list ...)
@@ -311,31 +330,62 @@ if !isdir(figurespath)
 end
 
 #---Get the genes to remove from the data set:
-#---Define a new figures path:
-pcts = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
+pcts = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
+iter = 1;
 
+n_genes_to_keep = [];
+n_genes_to_replaceORremove = [];
 for pct in pcts
-    figurespath_sub = figurespath * "Top_$(Int(round((1.0-pct), digits=2)*100))%_genes_removed/";
+    n_hvgs = size(st_dataMat, 2)
+
+    figurespath_sub = ""
+    if replace
+        @info "Run $(iter): Replacing the top $((1.0-pct)*100)% of the top selected genes with noise genes ..."
+        figurespath_sub = figurespath * "Top_$(Int(round((1.0-pct), digits=2)*100))%_genes_replaced/";
+    else    
+        @info "Run $(iter): Removing the top $((1.0-pct)*100)% of the top selected genes ..."
+        figurespath_sub = figurespath * "Top_$(Int(round((1.0-pct), digits=2)*100))%_genes_removed/";
+    end
     if !isdir(figurespath_sub)
         # Create the folder if it does not exist
         mkdir(figurespath_sub)
     end
+
     hist = countmap(string_vector);
     counts = collect(values(hist));
-    inds = findall(x->x>=pct, counts./length(Seeds)); 
-    df = DataFrame(Genes = labels[inds], Counts = counts[inds], Pct = counts[inds]./length(Seeds))
+    gene_inds_to_replace = findall(x->x>pct, counts./length(Seeds)); 
+    df = DataFrame(Genes = labels[gene_inds_to_replace], Counts = counts[gene_inds_to_replace], Pct = counts[gene_inds_to_replace]./length(Seeds))
     sort!(df, :Pct, rev=true)
 
     #---Create a new truncated dataset without the top 20% BAE selected genes:
-    sel_inds = findall(x->x in df.Genes, genenames);
-    gene_inds_to_keep = setdiff(1:length(genenames), sel_inds);
-    genenames_truncated = genenames[gene_inds_to_keep];
-    writedlm(datapath * "genenames_truncated.txt", genenames_truncated);
+    gene_inds_to_replace = findall(x->x in df.Genes, genenames)
+    n_replace = length(gene_inds_to_replace)
+    n_keep = n_hvgs-n_replace
+    if replace
+        @info "Replacing $(length(gene_inds_to_replace)) genes with noise genes ..."
+    else
+        @info "Removing $(length(gene_inds_to_replace)) genes ..."
+    end
+    push!(n_genes_to_keep, n_keep)
+    push!(n_genes_to_replaceORremove, n_replace)
+    gene_inds_to_keep = setdiff(1:length(genenames), gene_inds_to_replace);
+    genenames_to_keep = genenames[gene_inds_to_keep];
+    writedlm(figurespath_sub * "genenames_to_keep.txt", genenames_to_keep);
 
     log1_dataMat = Float32.(readdlm(datapath * "corticalMouseDataMat_HVGs_log1.txt"));
     celltype = vec(readdlm(datapath * "celltype.txt"));
-    X_st = BoostingAutoEncoder.standardize(log1_dataMat[:, gene_inds_to_keep]);
+    X_st = []
+    new_genenames = []
+    if replace
+        X_st = BoostingAutoEncoder.standardize(hcat(log1_dataMat[:, gene_inds_to_keep], X_noise[:, 1:n_replace]))
+        new_genenames = vcat(genenames_to_keep, noise_genes[1:n_replace])
+    else
+        X_st = BoostingAutoEncoder.standardize(log1_dataMat[:, gene_inds_to_keep])
+        new_genenames = genenames_to_keep
+    end
+  
     n, p = Int32.(size(X_st));
+    @info "Number of genes in the truncated dataset: $(p)"
 
     #------------------------------
     # Define and train BAE:
@@ -373,7 +423,7 @@ for pct in pcts
     Z_BAE = X_st * B_BAE;
 
     #---Determine BAE top genes per latent dimension:
-    selGenes_dict, selGenes_df = get_top_selected_genes(B_BAE, genenames;
+    selGenes_dict, selGenes_df = get_top_selected_genes(B_BAE, new_genenames;
         save_data=true,
         data_path=figurespath_sub
     );
@@ -384,9 +434,14 @@ for pct in pcts
     #---Result visualization:
     embedding_BAEUMAP = generate_umap(Z_BAE, plotseed);
 
+    title_string = "$(100 - Int.(round(pct*100, digits=2)))% replaced"
+
     create_colored_umap_plot(st_dataMat, celltype, plotseed; embedding=embedding_BAEUMAP, 
                             precomputed=true, save_plot=true, path=figurespath_sub * "/mousedata_(BAE)umap.pdf", 
-                            colorlabel="Celltype", legend_title="Cell type", show_axis=false
+                            colorlabel="Celltype", legend_title="Cell type", show_axis=false, Title=title_string, title_fontSize=42.0,
+                            legend_labelFontSize=32.0,
+                            legend_titleFontSize=36.0,
+                            legend_symbolSize=280.0,
     );
 
     create_latent_umaps(X_st, plotseed, Z_BAE; 
@@ -396,7 +451,7 @@ for pct in pcts
     );
 
     for l in 1:zdim
-        pl = normalized_scatter_top_values(B_BAE[:, l], genenames; top_n=10, dim=l)
+        pl = normalized_scatter_top_values(B_BAE[:, l], new_genenames; top_n=10, dim=l)
         savefig(pl, figurespath_sub * "scatterplot_genes_BAE_latdim$(l).pdf")
     end
 
@@ -410,4 +465,35 @@ for pct in pcts
         upper=0.9, lower=0.1, threshold=0.5, 
         save_plot=true, figurespath=figurespath_sub
     );
+
+    iter += 1
 end
+
+
+#---Create a plot showing the number of removed/replaced/and kept genes:
+p = size(st_dataMat, 2);
+#n_genes_to_replaceORremove = [1457, 1225, 916, 565, 321, 203, 127, 73, 43, 19, 0];
+#n_genes_to_keep = [43, 275, 584, 935, 1179, 1297, 1373, 1427, 1457, 1481, 1500];
+n_genes = [p for i in 1:length(pcts)];
+
+n_genes_plot = plot(1.0.-pcts, n_genes_to_replaceORremove,
+     title = "Number of replaced/removed/kept genes",
+     xlabel = "Quantile",
+     ylabel = "Number of genes",
+     legend = true,
+     label = "Replaced/removed",
+     linecolor = :blue,
+     linewidth = 3
+);
+n_genes_plot = plot!(1.0.-pcts, n_genes_to_keep,
+     title = "Number of replaced/removed/kept genes",
+     xlabel = "Quantile",
+     ylabel = "Number of genes",
+     legend = true,
+     label = "Kept",
+     linecolor = :orange,
+     linewidth = 3
+);
+
+savefig(n_genes_plot, figurespath * "/Number_of_genes_plot.pdf");
+n_genes_plot
