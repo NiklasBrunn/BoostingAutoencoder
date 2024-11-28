@@ -434,7 +434,8 @@ for pct in pcts
     #---Result visualization:
     embedding_BAEUMAP = generate_umap(Z_BAE, plotseed);
 
-    title_string = "$(100 - Int.(round(pct*100, digits=2)))% replaced"
+    #title_string = "$(100 - Int.(round(pct*100, digits=2)))% replaced"
+    title_string = "$(round((n_replace / n_hvgs)*100, digits=2))% replaced"
 
     create_colored_umap_plot(st_dataMat, celltype, plotseed; embedding=embedding_BAEUMAP, 
                             precomputed=true, save_plot=true, path=figurespath_sub * "/mousedata_(BAE)umap.pdf", 
@@ -469,6 +470,8 @@ for pct in pcts
     iter += 1
 end
 
+#pct_replaced = round.((n_genes_to_replaceORremove ./ p).*100, digits=2)
+
 
 #---Create a plot showing the number of removed/replaced/and kept genes:
 p = size(st_dataMat, 2);
@@ -478,16 +481,17 @@ n_genes = [p for i in 1:length(pcts)];
 
 n_genes_plot = plot(1.0.-pcts, n_genes_to_replaceORremove,
      title = "Number of replaced/removed/kept genes",
-     xlabel = "Quantile",
+     xlabel = "Frequcy threshold (gene selection stability)",
      ylabel = "Number of genes",
-     legend = true,
+     #legend = true,
      label = "Replaced/removed",
      linecolor = :blue,
-     linewidth = 3
+     linewidth = 3,
+     legend=:topleft
 );
 n_genes_plot = plot!(1.0.-pcts, n_genes_to_keep,
      title = "Number of replaced/removed/kept genes",
-     xlabel = "Quantile",
+     xlabel = "Frequcy threshold (gene selection stability)",
      ylabel = "Number of genes",
      legend = true,
      label = "Kept",
