@@ -34,6 +34,7 @@ using Statistics;
 using StatsBase;
 using DataFrames;
 using Plots;
+using ProgressMeter;
 #using BenchmarkTools;
 
 
@@ -287,3 +288,80 @@ df, df_filtered = find_matching_type_per_BAEdim(Z_BAE, String.(celltype);
     upper=0.9, lower=0.1, threshold=0.5, 
     save_plot=true, figurespath=figurespath
 );
+
+
+
+#-----------------------------------------------------------------
+# Investigation of encoder weight dynamics across training epochs:
+#-----------------------------------------------------------------
+#------------------------------
+# Define and train BAE:
+#------------------------------
+#---Seeds for reproducibility:
+modelseed = 7; 
+batchseed = 777; 
+plotseed = 1421;
+
+#---Hyperparameters for training BAE:
+mode = "jointLoss"; #options are: "alternating", "jointLoss"
+zdim = 10; 
+batchsize = 500; 
+epochs = 25;  
+ϵ = 0.01;
+M = 1;
+ν = 0.01;
+n, p = size(X_train_st);
+
+#---Build BAE:
+encoder = LinearLayer(zeros(p, zdim));
+
+Random.seed!(modelseed);
+decoder = Chain(
+                Dense(zdim, p, tanh, initW=Flux.glorot_uniform),
+                Dense(p, p, initW = Flux.glorot_uniform)         
+);
+
+BAE = Autoencoder(encoder, decoder);
+
+#---Training BAE:
+Random.seed!(batchseed); 
+opt = ADAM(ν);
+ps = Flux.params(BAE.decoder);
+
+coeffs = [];
+if mode == "alternating"
+    @info "Training BAE in alternating mode for $(epochs) epochs ..."
+
+    @showprogress for iter in 1:epochs
+        batch = Flux.Data.DataLoader(X_train_st', batchsize=batchsize, shuffle=true) 
+            
+        BAE.encoder.coeffs = seq_constr_compL2Boost(X_train_st, BAE, ϵ, zdim, m)
+                            
+        Flux.train!(loss_wrapper(BAE), ps, batch, opt) 
+
+        push!(coeffs, BAE.encoder.coeffs)
+    end
+
+elseif mode == "jointLoss"
+    @info "Training BAE in jointLoss mode for $(epochs) epochs ..."
+
+    @showprogress for iter in 1:epochs
+        batch = Flux.Data.DataLoader(X_train_st', batchsize=batchsize, shuffle=true) 
+                            
+        Flux.train!(jointLoss_wrapper(BAE, ϵ, M, zdim, iter), ps, batch, opt) 
+
+        push!(coeffs, BAE.encoder.coeffs)
+    end
+
+end
+
+#---Plot BAE encoder weight dynamics for the different latent dimensions:
+for dim in 1:zdim
+    coeffs_plot = plot_coefficients_dynamics_X(coeffs, dim; 
+        #iters=epochs, 
+        xscale=:identity, 
+        save_plot=true, 
+        path=figurespath * "coeffs_dynamics_latdim$(dim).pdf",
+        title="Latent dimension $(dim)" 
+    )
+end

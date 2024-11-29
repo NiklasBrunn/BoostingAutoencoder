@@ -451,3 +451,47 @@ function normalized_scatter_top_values(vec, labels; top_n=15, dim=k)
     hline!(p, [0], color=:black, linewidth=1.5, linestyle=:dash) # Add horizontal line at y=0
     return p
 end
+
+
+function plot_coefficients_dynamics(coeffs, dim; 
+    iters::Union{Int, Nothing}=nothing, 
+    xscale::Symbol=:log10, 
+    save_plot::Bool=false, 
+    path::Union{String, Nothing}=nothing,
+    title::String=""
+    )
+
+    # Number of iterations and number of coefficients
+    num_iters = length(coeffs)
+    num_coeffs = size(coeffs[1], 1)
+
+    # Preallocate the coefficient matrix
+    coeffs_dynamics = zeros(Float32, num_coeffs, num_iters)
+
+    # Populate the coefficient matrix
+    for iter in 1:num_iters
+        coeffs_dynamics[:, iter] = coeffs[iter][:, dim]
+    end
+
+    # Handle the number of iterations to plot
+    if typeof(iters) == Int && iters > num_iters
+        @warn "Number of iterations to plot is greater than the number of iterations in the data. Plotting all iterations."
+        iters = num_iters
+    elseif isnothing(iters)
+        iters = num_iters
+    end
+
+    # Prepare data for plotting
+    x = 1:iters
+    y = coeffs_dynamics[:, 1:iters]
+
+    # Create the plot
+    x_scale = string(xscale)
+    pl = plot(x, y', xlabel="Iteration " * "(" * x_scale * "scale)", ylabel="Coefficient value", title=title, lw=2, legend=false, xscale=xscale)
+
+    if save_plot
+        savefig(pl, path)
+    end
+
+    return pl
+end

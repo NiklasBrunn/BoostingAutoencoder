@@ -38,7 +38,7 @@ export
     # componentwise boosting functions:
     seq_constr_compL2Boost_jointLoss, seq_constr_compL2Boost, seq_compL2Boost, compL2Boost!, compL2Boost_jointLoss, calcunibeta, calcunibeta_jointLoss,
     # plotting functions:
-    vegaheatmap, create_colored_umap_plot, create_latent_umaps, normalized_scatter_top_values, 
+    vegaheatmap, create_colored_umap_plot, create_latent_umaps, normalized_scatter_top_values, plot_coefficients_dynamics,
     # data simulation functions:
     simulate_10StagesScRNAseq, simulate_3cellgroups3stagesScRNAseq, addstages!,
     # utility functions:
