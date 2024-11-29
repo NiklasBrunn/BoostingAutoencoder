@@ -357,7 +357,7 @@ end
 
 #---Plot BAE encoder weight dynamics for the different latent dimensions:
 for dim in 1:zdim
-    coeffs_plot = plot_coefficients_dynamics_X(coeffs, dim; 
+    coeffs_plot = plot_coefficients_dynamics(coeffs, dim; 
         #iters=epochs, 
         xscale=:identity, 
         save_plot=true, 

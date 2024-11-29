@@ -487,7 +487,7 @@ function plot_coefficients_dynamics(coeffs, dim;
 
     # Create the plot
     x_scale = string(xscale)
-    pl = plot(x, y', xlabel="Iteration " * "(" * x_scale * "scale)", ylabel="Coefficient value", title=title, lw=2, legend=false, xscale=xscale)
+    pl = plot(x, y', xlabel="Iteration " * "(" * x_scale * " scale)", ylabel="Coefficient value", title=title, lw=2, legend=false, xscale=xscale)
 
     if save_plot
         savefig(pl, path)
