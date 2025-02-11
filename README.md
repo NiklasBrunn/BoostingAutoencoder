@@ -1,4 +1,4 @@
-# Infusing structural assumptions into dimension reduction for single-cell RNA sequencing data to identify small gene sets
+# Infusing structural assumptions into dimensionality reduction for single-cell RNA sequencing data to identify small gene sets
 
 ## Overview
 This GitHub repository contains the code and scripts to define and train a boosting autoencoder (BAE) and to reproduce the results presented in our [manuscript](https://www.biorxiv.org/content/10.1101/2024.02.15.580085v1.abstract).
